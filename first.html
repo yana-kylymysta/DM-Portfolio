@@ -28,7 +28,7 @@
     font-family: var(--body);
     background: var(--off-white);
     color: var(--black);
-    font-size: 16px;
+    font-size: 1rem;
     line-height: 1.6;
     overflow-x: hidden;
     cursor: crosshair;
@@ -40,7 +40,7 @@
   nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
     display: flex; justify-content: space-between; align-items: center;
-    padding: 20px 48px;
+    padding: 1.25rem 3rem;
     mix-blend-mode: normal;
     background: rgba(245, 242, 237, 0.92);
     backdrop-filter: blur(8px);
@@ -49,16 +49,16 @@
 
   .nav-logo {
     font-family: var(--mono);
-    font-size: 13px;
+    font-size: 0.8125rem;
     font-weight: 700;
     letter-spacing: 0.05em;
     text-transform: uppercase;
   }
 
   .nav-links {
-    display: flex; gap: 40px; list-style: none;
+    display: flex; gap: 2.5rem; list-style: none;
     font-family: var(--mono);
-    font-size: 11px;
+    font-size: 0.6875rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
   }
@@ -67,11 +67,11 @@
 
   .nav-cta {
     font-family: var(--mono);
-    font-size: 11px;
+    font-size: 0.6875rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     border: 1.5px solid var(--black);
-    padding: 8px 20px;
+    padding: 0.5rem 1.25rem;
     cursor: crosshair;
     transition: all 0.15s;
   }
@@ -80,7 +80,7 @@
   /* HERO */
   .hero {
     min-height: 100vh;
-    padding: 140px 48px 80px;
+    padding: 8.75rem 3rem 5rem;
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: auto auto;
@@ -93,25 +93,25 @@
   .hero-eyebrow {
     grid-column: 1 / -1;
     font-family: var(--mono);
-    font-size: 11px;
+    font-size: 0.6875rem;
     letter-spacing: 0.15em;
     text-transform: uppercase;
     color: var(--mid);
-    margin-bottom: 24px;
-    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 1.5rem;
+    display: flex; align-items: center; gap: 0.75rem;
   }
 
   .hero-eyebrow::before {
     content: '';
     display: inline-block;
-    width: 32px; height: 1px;
+    width: 2rem; height: 0.0625rem;
     background: var(--mid);
   }
 
   .hero-headline {
     grid-column: 1 / -1;
     font-family: var(--serif-display);
-    font-size: clamp(80px, 12vw, 180px);
+    font-size: clamp(5rem, 12vw, 11.25rem);
     line-height: 0.9;
     letter-spacing: -0.01em;
     margin-bottom: 0;
@@ -124,17 +124,17 @@
     grid-column: 1 / -1;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    margin-top: 60px;
+    margin-top: 3.75rem;
     border-top: 1px solid var(--light-border);
-    padding-top: 40px;
-    gap: 40px;
+    padding-top: 2.5rem;
+    gap: 2.5rem;
   }
 
   .hero-desc {
-    font-size: 18px;
+    font-size: 1.125rem;
     font-weight: 300;
     line-height: 1.7;
-    max-width: 420px;
+    max-width: 26.25rem;
   }
 
   .hero-desc strong { font-weight: 500; }
@@ -142,20 +142,20 @@
   .hero-actions { display: flex; flex-direction: column; justify-content: space-between; }
 
   .hero-stats {
-    display: flex; gap: 48px;
-    margin-bottom: 32px;
+    display: flex; gap: 3rem;
+    margin-bottom: 2rem;
   }
 
   .stat-num {
     font-family: var(--serif-display);
-    font-size: 52px;
+    font-size: 3.25rem;
     line-height: 1;
     display: block;
   }
 
   .stat-label {
     font-family: var(--mono);
-    font-size: 10px;
+    font-size: 0.625rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--mid);
@@ -163,14 +163,14 @@
   }
 
   .btn-primary {
-    display: inline-flex; align-items: center; gap: 12px;
+    display: inline-flex; align-items: center; gap: 0.75rem;
     background: var(--black);
     color: var(--off-white);
     font-family: var(--mono);
-    font-size: 12px;
+    font-size: 0.75rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    padding: 16px 32px;
+    padding: 1rem 2rem;
     cursor: crosshair;
     transition: all 0.15s;
     width: fit-content;
@@ -184,7 +184,7 @@
   .ticker {
     background: var(--black);
     color: var(--off-white);
-    padding: 14px 0;
+    padding: 0.875rem 0;
     overflow: hidden;
     white-space: nowrap;
   }
@@ -196,13 +196,13 @@
 
   .ticker-item {
     font-family: var(--mono);
-    font-size: 11px;
+    font-size: 0.6875rem;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    padding: 0 40px;
+    padding: 0 2.5rem;
   }
 
-  .ticker-item .sep { color: var(--accent); margin: 0 8px; }
+  .ticker-item .sep { color: var(--accent); margin: 0 0.5rem; }
 
   @keyframes ticker {
     0% { transform: translateX(0); }
@@ -214,15 +214,15 @@
 
   .section-label {
     font-family: var(--mono);
-    font-size: 10px;
+    font-size: 0.625rem;
     letter-spacing: 0.15em;
     text-transform: uppercase;
     color: var(--mid);
-    display: flex; align-items: center; gap: 10px;
+    display: flex; align-items: center; gap: 0.625rem;
   }
   .section-label::before {
     content: ''; display: inline-block;
-    width: 20px; height: 1px; background: var(--mid);
+    width: 1.25rem; height: 0.0625rem; background: var(--mid);
   }
 
   /* PHILOSOPHY */
@@ -233,13 +233,13 @@
   }
 
   .philosophy-left {
-    padding: 80px 48px;
+    padding: 5rem 3rem;
     border-right: 1px solid var(--light-border);
     display: flex; flex-direction: column; justify-content: space-between;
   }
 
   .philosophy-right {
-    padding: 80px 48px;
+    padding: 5rem 3rem;
     background: var(--black);
     color: var(--off-white);
     display: flex; flex-direction: column; justify-content: flex-end;
@@ -248,40 +248,40 @@
   
   .philosophy-big {
     font-family: var(--serif-display);
-    font-size: clamp(52px, 7vw, 96px);
+    font-size: clamp(3.25rem, 7vw, 6rem);
     line-height: 0.92;
-    margin-top: 48px;
+    margin-top: 3rem;
   }
 
   .philosophy-body {
-    font-size: 17px;
+    font-size: 1.0625rem;
     font-weight: 300;
     line-height: 1.75;
-    max-width: 480px;
+    max-width: 30rem;
   }
 
   .philosophy-quote {
     font-family: var(--serif-display);
-    font-size: clamp(36px, 4vw, 56px);
+    font-size: clamp(2.25rem, 4vw, 3.5rem);
     line-height: 1.0;
-    margin-bottom: 32px;
+    margin-bottom: 2rem;
   }
 
   .philosophy-quote .accent { color: var(--accent); }
 
   /* SERVICES */
-  .services { padding: 80px 48px; }
+  .services { padding: 5rem 3rem; }
 
   .services-header {
     display: flex; justify-content: space-between; align-items: flex-end;
-    margin-bottom: 60px;
+    margin-bottom: 3.75rem;
   }
 
   .services-title {
     font-family: var(--serif-display);
-    font-size: clamp(48px, 6vw, 84px);
+    font-size: clamp(3rem, 6vw, 5.25rem);
     line-height: 0.92;
-    margin-top: 16px;
+    margin-top: 1rem;
   }
 
   .services-grid {
@@ -291,7 +291,7 @@
   }
 
   .service-card {
-    padding: 48px 40px;
+    padding: 3rem 2.5rem;
     border-right: 1px solid var(--light-border);
     position: relative;
     transition: background 0.2s;
@@ -304,104 +304,104 @@
 
   .service-num {
     font-family: var(--mono);
-    font-size: 11px;
+    font-size: 0.6875rem;
     color: var(--mid);
     display: block;
-    margin-bottom: 32px;
+    margin-bottom: 2rem;
     transition: color 0.2s;
   }
 
   .service-name {
     font-family: var(--serif-display);
-    font-size: 36px;
+    font-size: 2.25rem;
     line-height: 1.0;
-    margin-bottom: 20px;
+    margin-bottom: 1.25rem;
   }
 
   .service-desc {
-    font-size: 14px;
+    font-size: 0.875rem;
     font-weight: 300;
     line-height: 1.7;
     color: var(--mid);
-    margin-bottom: 32px;
+    margin-bottom: 2rem;
     transition: color 0.2s;
   }
   .service-card:hover .service-desc { color: rgba(255,255,255,0.65); }
 
-  .service-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+  .service-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
   .service-tags span {
     font-family: var(--mono);
-    font-size: 10px;
+    font-size: 0.625rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     border: 1px solid var(--light-border);
-    padding: 4px 10px;
+    padding: 0.25rem 0.625rem;
     transition: all 0.2s;
   }
 
   /* PROCESS */
-  .process { padding: 80px 48px; }
+  .process { padding: 5rem 3rem; }
 
   .process-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 0;
-    margin-top: 60px;
+    margin-top: 3.75rem;
     border: 1px solid var(--light-border);
   }
 
   .process-step {
-    padding: 40px 32px;
+    padding: 2.5rem 2rem;
     border-right: 1px solid var(--light-border);
   }
   .process-step:last-child { border-right: none; }
 
   .process-num {
     font-family: var(--serif-display);
-    font-size: 64px;
+    font-size: 4rem;
     line-height: 1;
     color: var(--light-border);
     display: block;
-    margin-bottom: 16px;
+    margin-bottom: 1rem;
   }
 
   .process-name {
     font-family: var(--mono);
-    font-size: 12px;
+    font-size: 0.75rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    margin-bottom: 16px;
+    margin-bottom: 1rem;
   }
 
   .process-desc {
-    font-size: 14px;
+    font-size: 0.875rem;
     font-weight: 300;
     line-height: 1.7;
     color: var(--mid);
   }
 
   /* PROJECTS */
-  .projects { padding: 80px 48px; }
+  .projects { padding: 5rem 3rem; }
 
   .projects-header {
     display: flex; justify-content: space-between; align-items: flex-end;
-    margin-bottom: 48px;
+    margin-bottom: 3rem;
   }
 
   .projects-title {
     font-family: var(--serif-display);
-    font-size: clamp(48px, 6vw, 84px);
+    font-size: clamp(3rem, 6vw, 5.25rem);
     line-height: 0.92;
-    margin-top: 16px;
+    margin-top: 1rem;
   }
 
   .view-all {
     font-family: var(--mono);
-    font-size: 11px;
+    font-size: 0.6875rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     border-bottom: 1px solid var(--black);
-    padding-bottom: 2px;
+    padding-bottom: 0.125rem;
     cursor: crosshair;
   }
   .view-all:hover { color: var(--accent); border-color: var(--accent); }
@@ -412,49 +412,49 @@
     display: grid;
     grid-template-columns: 64px 1fr 200px 200px 80px;
     align-items: center;
-    padding: 28px 0;
+    padding: 1.75rem 0;
     border-bottom: 1px solid var(--light-border);
     cursor: crosshair;
     transition: padding-left 0.2s;
-    gap: 24px;
+    gap: 1.5rem;
   }
 
   .project-row:first-child { border-top: 1px solid var(--light-border); }
 
-  .project-row:hover { padding-left: 12px; }
+  .project-row:hover { padding-left: 0.75rem; }
 
   .project-row:hover .project-title { color: var(--accent); }
 
   .project-index {
     font-family: var(--mono);
-    font-size: 11px;
+    font-size: 0.6875rem;
     color: var(--mid);
   }
 
   .project-title {
     font-family: var(--serif-display);
-    font-size: 28px;
+    font-size: 1.75rem;
     line-height: 1;
     transition: color 0.2s;
   }
 
   .project-category {
     font-family: var(--mono);
-    font-size: 10px;
+    font-size: 0.625rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--mid);
   }
 
   .project-role {
-    font-size: 13px;
+    font-size: 0.8125rem;
     font-weight: 300;
     color: var(--mid);
   }
 
   .project-arrow {
     font-family: var(--mono);
-    font-size: 16px;
+    font-size: 1rem;
     text-align: right;
     opacity: 0;
     transition: opacity 0.2s;
@@ -462,13 +462,13 @@
   .project-row:hover .project-arrow { opacity: 1; }
 
   /* AUDIO PLAYER */
-  .audio-section { padding: 80px 48px; background: var(--black); color: var(--off-white); }
+  .audio-section { padding: 5rem 3rem; background: var(--black); color: var(--off-white); }
 
   .audio-title {
     font-family: var(--serif-display);
-    font-size: clamp(48px, 6vw, 84px);
+    font-size: clamp(3rem, 6vw, 5.25rem);
     line-height: 0.92;
-    margin: 16px 0 48px;
+    margin: 1rem 0 3rem;
   }
 
   .audio-title .accent { color: var(--accent); }
@@ -483,8 +483,8 @@
   .track-list { border-right: 1px solid rgba(255,255,255,0.12); }
 
   .track-item {
-    display: flex; align-items: center; gap: 20px;
-    padding: 24px 32px;
+    display: flex; align-items: center; gap: 1.25rem;
+    padding: 1.5rem 2rem;
     border-bottom: 1px solid rgba(255,255,255,0.08);
     cursor: crosshair;
     transition: background 0.15s;
@@ -494,10 +494,10 @@
   .track-item.active .track-name { color: var(--accent); }
 
   .track-play-btn {
-    width: 36px; height: 36px;
+    width: 2.25rem; height: 2.25rem;
     border: 1px solid rgba(255,255,255,0.2);
     display: flex; align-items: center; justify-content: center;
-    font-size: 12px;
+    font-size: 0.75rem;
     flex-shrink: 0;
     transition: all 0.15s;
   }
@@ -506,49 +506,49 @@
   }
 
   .track-info { flex: 1; }
-  .track-name { font-size: 15px; font-weight: 400; margin-bottom: 4px; }
-  .track-meta { font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.4); }
-  .track-dur { font-family: var(--mono); font-size: 12px; color: rgba(255,255,255,0.4); }
+  .track-name { font-size: 0.9375rem; font-weight: 400; margin-bottom: 0.25rem; }
+  .track-meta { font-family: var(--mono); font-size: 0.625rem; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.4); }
+  .track-dur { font-family: var(--mono); font-size: 0.75rem; color: rgba(255,255,255,0.4); }
 
   .player-right {
-    padding: 48px 40px;
+    padding: 3rem 2.5rem;
     display: flex; flex-direction: column; justify-content: space-between;
   }
 
   .now-playing-label {
     font-family: var(--mono);
-    font-size: 10px;
+    font-size: 0.625rem;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: rgba(255,255,255,0.4);
-    margin-bottom: 8px;
+    margin-bottom: 0.5rem;
   }
 
   .now-playing-title {
     font-family: var(--serif-display);
-    font-size: 42px;
+    font-size: 2.625rem;
     line-height: 1;
-    margin-bottom: 4px;
+    margin-bottom: 0.25rem;
   }
 
   .now-playing-sub {
     font-family: var(--mono);
-    font-size: 11px;
+    font-size: 0.6875rem;
     color: rgba(255,255,255,0.4);
     text-transform: uppercase;
     letter-spacing: 0.08em;
   }
 
   .waveform-container {
-    height: 80px;
-    display: flex; align-items: center; gap: 2px;
-    margin: 32px 0;
+    height: 5rem;
+    display: flex; align-items: center; gap: 0.125rem;
+    margin: 2rem 0;
     overflow: hidden;
   }
 
   .waveform-bar {
     flex-shrink: 0;
-    width: 3px;
+    width: 0.1875rem;
     background: rgba(255,255,255,0.15);
     border-radius: 1px;
     transition: background 0.1s;
@@ -557,26 +557,26 @@
   .waveform-bar.active { background: white; }
 
   .player-controls {
-    display: flex; align-items: center; gap: 24px;
+    display: flex; align-items: center; gap: 1.5rem;
   }
 
   .ctrl-btn {
     background: none; border: none;
     color: var(--off-white);
     cursor: crosshair;
-    font-size: 14px;
+    font-size: 0.875rem;
     opacity: 0.5;
     transition: opacity 0.15s;
   }
   .ctrl-btn:hover { opacity: 1; }
 
   .ctrl-play {
-    width: 52px; height: 52px;
+    width: 3.25rem; height: 3.25rem;
     background: var(--accent);
     border: none;
     color: white;
     cursor: crosshair;
-    font-size: 18px;
+    font-size: 1.125rem;
     display: flex; align-items: center; justify-content: center;
     transition: transform 0.15s;
     opacity: 1;
@@ -585,7 +585,7 @@
 
   .progress-bar {
     flex: 1;
-    height: 2px;
+    height: 0.125rem;
     background: rgba(255,255,255,0.15);
     position: relative;
     cursor: crosshair;
@@ -598,19 +598,19 @@
 
   .time-display {
     font-family: var(--mono);
-    font-size: 11px;
+    font-size: 0.6875rem;
     color: rgba(255,255,255,0.4);
     white-space: nowrap;
   }
 
   /* TESTIMONIALS */
-  .testimonials { padding: 80px 48px; }
+  .testimonials { padding: 5rem 3rem; }
 
   .testimonials-title {
     font-family: var(--serif-display);
-    font-size: clamp(48px, 6vw, 84px);
+    font-size: clamp(3rem, 6vw, 5.25rem);
     line-height: 0.92;
-    margin: 16px 0 60px;
+    margin: 1rem 0 3.75rem;
   }
 
   .testimonials-grid {
@@ -621,7 +621,7 @@
   }
 
   .testimonial-card {
-    padding: 48px 40px;
+    padding: 3rem 2.5rem;
     border-right: 1px solid var(--light-border);
     border-bottom: 1px solid var(--light-border);
   }
@@ -630,26 +630,26 @@
 
   .testimonial-quote-mark {
     font-family: var(--serif-display);
-    font-size: 80px;
+    font-size: 5rem;
     line-height: 0.7;
     color: var(--light-border);
     display: block;
-    margin-bottom: 16px;
+    margin-bottom: 1rem;
   }
 
   .testimonial-text {
-    font-size: 16px;
+    font-size: 1rem;
     font-weight: 300;
     line-height: 1.75;
-    margin-bottom: 32px;
+    margin-bottom: 2rem;
   }
 
   .testimonial-author {
-    display: flex; align-items: center; gap: 16px;
+    display: flex; align-items: center; gap: 1rem;
   }
 
   .author-avatar {
-    width: 44px; height: 44px;
+    width: 2.75rem; height: 2.75rem;
     border-radius: 0;
     background: var(--light-border);
     overflow: hidden;
@@ -657,8 +657,8 @@
   }
   .author-avatar img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1); }
 
-  .author-name { font-weight: 500; font-size: 14px; }
-  .author-role { font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--mid); }
+  .author-name { font-weight: 500; font-size: 0.875rem; }
+  .author-role { font-family: var(--mono); font-size: 0.625rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--mid); }
 
   /* CTA BLOCK */
   .cta-block {
@@ -668,7 +668,7 @@
   }
 
   .cta-left {
-    padding: 80px 48px;
+    padding: 5rem 3rem;
     background: var(--accent);
     color: var(--off-white);
     display: flex; flex-direction: column; justify-content: space-between;
@@ -676,46 +676,46 @@
 
   .cta-big {
     font-family: var(--serif-display);
-    font-size: clamp(64px, 9vw, 140px);
+    font-size: clamp(4rem, 9vw, 8.75rem);
     line-height: 0.88;
   }
 
   .cta-right {
-    padding: 80px 48px;
+    padding: 5rem 3rem;
     display: flex; flex-direction: column; justify-content: space-between;
     border-left: 1px solid var(--light-border);
   }
 
   .cta-contact-title {
     font-family: var(--serif-display);
-    font-size: 48px;
+    font-size: 3rem;
     line-height: 0.92;
-    margin-top: 16px;
-    margin-bottom: 32px;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
   }
 
-  .cta-contact-links { display: flex; flex-direction: column; gap: 16px; }
+  .cta-contact-links { display: flex; flex-direction: column; gap: 1rem; }
 
   .contact-link-row {
     display: flex; justify-content: space-between; align-items: center;
-    padding: 20px 0;
+    padding: 1.25rem 0;
     border-bottom: 1px solid var(--light-border);
     cursor: crosshair;
     transition: padding-left 0.2s;
   }
-  .contact-link-row:hover { padding-left: 8px; }
+  .contact-link-row:hover { padding-left: 0.5rem; }
   .contact-link-row:hover .contact-link-label { color: var(--accent); }
   .contact-link-row:first-child { border-top: 1px solid var(--light-border); }
 
   .contact-link-label {
     font-family: var(--serif-display);
-    font-size: 28px;
+    font-size: 1.75rem;
     transition: color 0.2s;
   }
 
   .contact-link-type {
     font-family: var(--mono);
-    font-size: 10px;
+    font-size: 0.625rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--mid);
@@ -724,17 +724,17 @@
   /* FOOTER */
   footer {
     display: flex; justify-content: space-between; align-items: center;
-    padding: 28px 48px;
+    padding: 1.75rem 3rem;
     background: var(--black);
     color: var(--off-white);
     font-family: var(--mono);
-    font-size: 11px;
+    font-size: 0.6875rem;
     letter-spacing: 0.08em;
   }
 
   footer .f-copy { color: rgba(255,255,255,0.4); }
 
-  .f-links { display: flex; gap: 32px; }
+  .f-links { display: flex; gap: 2rem; }
   .f-links a { color: rgba(255,255,255,0.6); }
   .f-links a:hover { color: var(--accent); }
 
@@ -743,7 +743,7 @@
     position: absolute;
     right: 0; bottom: 40px;
     width: 45%;
-    height: 200px;
+    height: 12.5rem;
     opacity: 0.08;
     pointer-events: none;
   }
@@ -760,10 +760,10 @@
   }
 
   /* MOBILE BASICS */
-  @media (max-width: 900px) {
-    nav { padding: 16px 24px; }
+  @media (max-width: 56.25rem) {
+    nav { padding: 1rem 1.5rem; }
     .nav-links { display: none; }
-    .hero { padding: 120px 24px 60px; grid-template-columns: 1fr; }
+    .hero { padding: 7.5rem 1.5rem 3.75rem; grid-template-columns: 1fr; }
     .hero-bottom { grid-template-columns: 1fr; }
     .philosophy, .cta-block { grid-template-columns: 1fr; }
     .philosophy-right { border-top: 1px solid var(--light-border); }
@@ -776,13 +776,13 @@
     .track-list { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.12); }
     .testimonials-grid { grid-template-columns: 1fr; }
     .testimonial-card { border-right: none; }
-    .testimonials { padding: 60px 24px; }
-    .services { padding: 60px 24px; }
-    .projects { padding: 60px 24px; }
-    .audio-section { padding: 60px 24px; }
-    .process { padding: 60px 24px; }
-    .cta-left, .cta-right { padding: 60px 24px; }
-    footer { padding: 20px 24px; flex-direction: column; gap: 16px; text-align: center; }
+    .testimonials { padding: 3.75rem 1.5rem; }
+    .services { padding: 3.75rem 1.5rem; }
+    .projects { padding: 3.75rem 1.5rem; }
+    .audio-section { padding: 3.75rem 1.5rem; }
+    .process { padding: 3.75rem 1.5rem; }
+    .cta-left, .cta-right { padding: 3.75rem 1.5rem; }
+    footer { padding: 1.25rem 1.5rem; flex-direction: column; gap: 1rem; text-align: center; }
   }
 </style>
 </head>
@@ -875,7 +875,7 @@
     <div class="philosophy-quote">
       "Every scene has an emotional truth. My job is to find the exact sound that makes the audience feel it — not notice it."
     </div>
-    <p class="philosophy-body" style="color: rgba(245,242,237,0.65); font-size: 15px;">
+    <p class="philosophy-body" style="color: rgba(245,242,237,0.65); font-size: 0.9375rem;">
       Most editors deliver technically correct audio. I deliver scenes that make people stop scrolling, hold their breath, or reach for the tissues. That difference comes from treating music as narrative structure — not background noise.
     </p>
   </div>
@@ -932,7 +932,7 @@
 <section class="process reveal">
   <div class="section-label">How It Works</div>
   <div style="display:flex; justify-content:space-between; align-items:flex-end;">
-    <h2 class="services-title" style="font-size: clamp(40px, 5vw, 72px);">THE PROCESS</h2>
+    <h2 class="services-title" style="font-size: clamp(2.5rem, 5vw, 4.5rem);">THE PROCESS</h2>
   </div>
 
   <div class="process-grid">
@@ -1074,7 +1074,7 @@
       <div class="waveform-container" id="waveform"></div>
 
       <div>
-        <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
+        <div style="display:flex; align-items:center; gap: 0.75rem; margin-bottom: 1rem;">
           <div class="progress-bar" id="progress-bar" onclick="seekAudio(event, this)">
             <div class="progress-fill" id="progress-fill"></div>
           </div>
@@ -1086,7 +1086,7 @@
           <button class="ctrl-play" id="play-btn" onclick="togglePlay()">▶</button>
           <button class="ctrl-btn" onclick="nextTrack()">⏭</button>
           <div style="flex:1;"></div>
-          <span style="font-family:var(--mono);font-size:10px;color:rgba(255,255,255,0.3);letter-spacing:0.08em;">MP3 PREVIEW</span>
+          <span style="font-family:var(--mono);font-size: 0.625rem;color:rgba(255,255,255,0.3);letter-spacing:0.08em;">MP3 PREVIEW</span>
         </div>
       </div>
     </div>
@@ -1103,7 +1103,7 @@
       <span class="testimonial-quote-mark">"</span>
       <p class="testimonial-text">Dmytro completely transformed our short film. We had the right shots but something felt flat — he built a music edit that made the final 90 seconds genuinely devastating. Festival jury noticed it immediately.</p>
       <div class="testimonial-author">
-        <div class="author-avatar" style="background:#D8D4CD; display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;">AS</div>
+        <div class="author-avatar" style="background:#D8D4CD; display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size: 0.75rem;">AS</div>
         <div>
           <div class="author-name">Anna S.</div>
           <div class="author-role">Film Director, Berlin</div>
@@ -1114,7 +1114,7 @@
       <span class="testimonial-quote-mark">"</span>
       <p class="testimonial-text">We've worked with a lot of freelancers for our brand videos. Dmytro stands out because he actually understands what we're trying to say — and then makes the music say it louder.</p>
       <div class="testimonial-author">
-        <div class="author-avatar" style="background:#D8D4CD; display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;">MK</div>
+        <div class="author-avatar" style="background:#D8D4CD; display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size: 0.75rem;">MK</div>
         <div>
           <div class="author-name">Michael K.</div>
           <div class="author-role">Creative Director, Amsterdam</div>
@@ -1125,7 +1125,7 @@
       <span class="testimonial-quote-mark">"</span>
       <p class="testimonial-text">Fast, precise, communicates everything clearly. On Upwork I've had bad experiences with "creative" types who miss deadlines. Dmytro delivered early, with three solid versions to choose from.</p>
       <div class="testimonial-author">
-        <div class="author-avatar" style="background:#D8D4CD; display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;">JL</div>
+        <div class="author-avatar" style="background:#D8D4CD; display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size: 0.75rem;">JL</div>
         <div>
           <div class="author-name">Jessica L.</div>
           <div class="author-role">Producer, New York</div>
@@ -1136,7 +1136,7 @@
       <span class="testimonial-quote-mark">"</span>
       <p class="testimonial-text">Hired for a 60-second ad, ended up reworking our entire brand sound. His ear for what feels right for an audience — not just what sounds technically good — is rare.</p>
       <div class="testimonial-author">
-        <div class="author-avatar" style="background:#D8D4CD; display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;">RP</div>
+        <div class="author-avatar" style="background:#D8D4CD; display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size: 0.75rem;">RP</div>
         <div>
           <div class="author-name">Romain P.</div>
           <div class="author-role">Marketing Lead, Paris</div>
@@ -1151,7 +1151,7 @@
   <div class="cta-left">
     <div class="section-label" style="color:rgba(245,242,237,0.6);">Ready?</div>
     <h2 class="cta-big">LET'S MAKE THEM FEEL IT.</h2>
-    <p style="font-size:16px;font-weight:300;max-width:360px;line-height:1.7;margin-top:32px;">Available for film, advertising, documentary, podcast, and brand audio projects. Response within 24 hours.</p>
+    <p style="font-size: 1rem;font-weight:300;max-width: 22.5rem;line-height: 1.7;margin-top: 2rem;">Available for film, advertising, documentary, podcast, and brand audio projects. Response within 24 hours.</p>
   </div>
   <div class="cta-right">
     <div>
@@ -1172,7 +1172,7 @@
         <span class="contact-link-type">Connect ↗</span>
       </a>
     </div>
-    <p style="font-family:var(--mono);font-size:10px;color:var(--mid);letter-spacing:0.08em;text-transform:uppercase;margin-top:32px;">Based in Kyiv · Available Worldwide · UTC+2</p>
+    <p style="font-family:var(--mono);font-size: 0.625rem;color:var(--mid);letter-spacing:0.08em;text-transform:uppercase;margin-top: 2rem;">Based in Kyiv · Available Worldwide · UTC+2</p>
   </div>
 </section>
 
