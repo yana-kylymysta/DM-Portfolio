@@ -1,0 +1,214 @@
+/* ============================================================
+   sections.css — Shared section components
+   ============================================================ */
+
+/* ── Stacking safety: all page sections above sticky hero (z:1) ── */
+/* Hero is position:sticky z-index:1 within .hero-scroll-scene.
+   Every section that follows must form its own stacking context
+   at z-index ≥ 2 so it paints over the hero during the parallax
+   overlap phase. .about already declares z-index:2 in about.css. */
+.ticker,
+.philosophy,
+.services,
+.reel-statement,
+.process,
+.editbay,
+.projects,
+.testimonials,
+.cta-block {
+  position: relative;
+  z-index: 2;
+}
+
+/* ── Section label ── */
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.section-label::before {
+  content: '✦';
+  font-size: 0.4rem;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+.cta-left .section-label::before { color: rgba(245, 242, 237, 0.6); }
+
+/* ── PHILOSOPHY ── */
+.philosophy {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 60vh;
+  border-bottom: 1px solid var(--rule);
+}
+
+.philosophy-left {
+  padding: 5rem var(--pad-page);
+  display: flex; flex-direction: column; justify-content: flex-end;
+}
+
+.philosophy-right {
+  min-height: 400px;
+  padding: 5rem var(--pad-page);
+  background: #111;
+  color: var(--ink);
+  border-right: 1px solid var(--rule);
+  display: flex; flex-direction: column; justify-content: flex-end;
+  position: relative;
+  overflow: hidden;
+}
+.philosophy-right::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: rgba(10, 10, 10, 0.28);
+  z-index: 1;
+  pointer-events: none;
+}
+.philosophy-right > * { position: relative; z-index: 2; }
+
+/* Philosophy image — overscan + parallax target */
+.philosophy-right-img {
+  position: absolute;
+  /* Overscan the container so the GSAP parallax translate never reveals
+     a gap on either side. Parent .philosophy-right has overflow:hidden
+     which clips the excess. Overscan must exceed the parallax yPercent
+     range (currently 6%) — 8% gives a safe margin. */
+  inset: -8%;
+  width: 116%;
+  height: 116%;
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  will-change: transform;
+  z-index: 0;
+  /* Note: hover-zoom previously lived here but conflicted with GSAP's
+     inline transform (parallax stomps any CSS-driven scale). If hover
+     zoom is needed, reintroduce via an inner wrapper element so the
+     two transforms live on separate nodes. */
+}
+
+.philosophy-big { margin-top: 3rem; }
+
+.philosophy-body {
+  font-size: 1.0625rem;
+  font-weight: 300;
+  line-height: 1.75;
+  max-width: 480px;
+  color: var(--ink);
+}
+
+.philosophy-quote {
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 4vw, 3.5rem);
+  line-height: 1.0;
+  margin-bottom: 2rem;
+  color: var(--ink);
+}
+.philosophy-quote .accent { color: var(--accent); }
+
+/* ── SERVICES ── */
+/* padding handled by layout.css */
+
+.services-header {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  padding-top: clamp(2rem, 5vh, 3.5rem);
+  margin-bottom: 3.75rem;
+}
+
+.services-title {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 6vw, 5.25rem);
+  line-height: 0.92;
+  color: var(--ink);
+  margin-top: 1rem;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border: 1px solid var(--rule);
+  min-width: 0;
+}
+
+.service-card {
+  padding: 3rem 2.5rem;
+  border-right: 1px solid var(--rule);
+  position: relative;
+  overflow: hidden;
+  transition: background var(--dur-fast) var(--ease-glide);
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-2);
+  color: var(--ink);
+}
+.service-card:last-child { border-right: none; }
+
+/* Accent bar on hover */
+.service-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 400ms var(--ease-glide);
+  z-index: 2;
+}
+
+.service-card:hover { background: var(--bg-3); }
+.service-card:hover::before { transform: scaleX(1); }
+
+.service-num {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: var(--accent-2);
+  display: block;
+  margin-bottom: 2rem;
+  transition: color var(--dur-fast) var(--ease-glide);
+}
+.service-card:hover .service-num { color: var(--accent); }
+
+.service-name {
+  font-family: var(--font-display);
+  font-size: 2.25rem;
+  line-height: 1.0;
+  margin-bottom: 1.25rem;
+  min-height: 4.75rem;
+  color: var(--ink);
+  transition: color var(--dur-fast) var(--ease-glide);
+}
+.service-card:hover .service-name { color: var(--accent-2); }
+
+.service-desc {
+  font-size: 0.875rem;
+  font-weight: 300;
+  line-height: 1.7;
+  color: var(--ink-2);
+  margin-bottom: 2rem;
+  transition: color var(--dur-fast) var(--ease-glide);
+  flex: 1;
+}
+.service-card:hover .service-desc { color: var(--ink); }
+
+.service-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.service-tags span {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border: 1px solid var(--rule);
+  color: var(--ink-2);
+  padding: 0.25rem 0.625rem;
+  transition: all var(--dur-fast) var(--ease-glide);
+}
+.service-card:hover .service-tags span {
+  border-color: rgba(91, 224, 200, 0.25);
+  color: var(--ink-2);
+}
+
+/* PROCESS — see process.css for the active timeline implementation.
+   Old .process-grid / .process-step rules removed in v9 refactor (dead code). */

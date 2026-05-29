@@ -1,0 +1,224 @@
+/* ============================================================
+   nav.css — Fixed navigation bar (dark-native)
+   Mobile-first: burger + drawer default; desktop links ≥901px.
+   ============================================================ */
+
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(11, 11, 12, 0.72);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--rule);
+}
+.nav-container {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1.25rem var(--pad-page);
+}
+
+.nav-logo {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.nav-links {
+  display: flex; gap: 2.5rem; list-style: none;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.nav-links a { color: var(--ink-2); transition: color var(--dur-fast) var(--ease-glide); }
+.nav-links a:hover { color: var(--accent-2); }
+
+.nav-cta {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--ink);
+  padding: 0.5rem 1.25rem;
+  cursor: pointer;
+  transition: all var(--dur-fast) var(--ease-glide);
+}
+.nav-cta:hover { background: var(--bg-2); color: var(--accent-2); border-color: var(--ink); }
+
+/* ── Visibility groups — mobile defaults ── */
+/* Sound icon item inside the nav-links list (hidden on mobile, shown ≥901). */
+.nav-sound-li { display: none; list-style: none; }
+
+/* Mobile sound button (visible by default, hidden ≥901).
+   Wrapped in `nav` to lift specificity above sound-btn.css's `.nav-sound-btn { display:flex }`
+   so the desktop reset wins. */
+nav .nav-sound-mobile { display: flex; }
+
+/* Upwork CTA shown only on the tablet range (601–900). */
+.nav-upwork-tablet { display: none; }
+@media (min-width: 601px) and (max-width: 900px) { .nav-upwork-tablet { display: inline-flex; } }
+
+/* Desktop nav CTA — hidden on mobile, shown ≥901. */
+.nav-cta-desktop { display: none; }
+
+/* Burger — visible on mobile, hidden ≥901. */
+.burger {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 2rem; height: 2rem;
+  background: none; border: none;
+  padding: 0; cursor: pointer;
+  flex-shrink: 0;
+  z-index: 201; position: relative;
+}
+.burger span {
+  display: block;
+  width: 100%; height: 1.5px;
+  background: var(--ink);
+  transform-origin: center;
+  transition: transform 0.32s cubic-bezier(.22,1,.36,1),
+              opacity 0.18s ease,
+              width 0.28s ease;
+}
+.burger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.burger.open span:nth-child(2) { opacity: 0; width: 0; }
+.burger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+/* ── Mobile drawer (fullscreen) ── */
+.nav-drawer {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: var(--bg);
+  border-left: 1px solid var(--rule);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 6rem 2.5rem 4rem;
+  transform: translateX(100%);
+  transition: transform 0.42s cubic-bezier(.22,1,.36,1);
+  pointer-events: none;
+  visibility: hidden;
+}
+.nav-drawer.open {
+  transform: translateX(0);
+  pointer-events: all;
+  visibility: visible;
+}
+
+.drawer-close {
+  position: absolute;
+  top: 1.25rem; right: 1.5rem;
+  width: 2.5rem; height: 2.5rem;
+  background: transparent;
+  border: 1.5px solid var(--rule);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease 0.1s, border-color 0.15s, background 0.15s;
+}
+.nav-drawer.open .drawer-close { opacity: 1; }
+.drawer-close:hover { background: var(--rule); border-color: var(--accent-2); }
+.drawer-close:hover .drawer-close-icon { stroke: var(--accent-2); }
+
+.drawer-close-icon {
+  width: 14px; height: 14px;
+  stroke: var(--ink);
+  stroke-width: 1.5;
+  stroke-linecap: square;
+  transition: stroke 0.15s;
+}
+
+.nav-drawer-label {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+.nav-drawer-label::before {
+  content: '✦';
+  font-size: 0.4rem;
+  color: var(--accent-2);
+  display: inline-block;
+}
+
+.nav-drawer ul { list-style: none; display: flex; flex-direction: column; width: 100%; }
+.nav-drawer ul li { border-bottom: 1px solid var(--rule); overflow: hidden; }
+.nav-drawer ul li:first-child { border-top: 1px solid var(--rule); }
+.nav-drawer ul li a {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(2.75rem, 10vw, 3rem);
+  font-weight: 800;
+  line-height: 1;
+  padding: 0.875rem 0;
+  color: var(--ink);
+  letter-spacing: 0.04em;
+  opacity: 0;
+  transform: translateY(36px);
+  transition: transform 0.38s cubic-bezier(.22,1,.36,1),
+              opacity 0.3s ease,
+              color 0.15s;
+}
+.nav-drawer.open ul li a { opacity: 1; transform: translateY(0); }
+.nav-drawer.open ul li:nth-child(1) a { transition-delay: 0.04s; }
+.nav-drawer.open ul li:nth-child(2) a { transition-delay: 0.09s; }
+.nav-drawer.open ul li:nth-child(3) a { transition-delay: 0.14s; }
+.nav-drawer.open ul li:nth-child(4) a { transition-delay: 0.19s; }
+.nav-drawer ul li a:hover { color: var(--accent); }
+
+.nav-drawer-cta {
+  margin-top: 2.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 1.5px solid var(--ink);
+  padding: 0.875rem 2rem;
+  display: inline-block;
+  width: fit-content;
+  background: var(--bg-2);
+  color: var(--accent-2);
+  opacity: 0;
+  transform: translateY(18px);
+  transition: transform 0.38s cubic-bezier(.22,1,.36,1) 0.24s,
+              opacity 0.3s ease 0.24s,
+              background 0.15s, color 0.15s;
+  cursor: pointer;
+}
+.nav-drawer.open .nav-drawer-cta { opacity: 1; transform: translateY(0); }
+.nav-drawer-cta:hover { background: transparent; color: var(--ink); border-color: var(--rule); }
+
+/* ── ≥ 601px (tablet portrait): drawer becomes side panel ── */
+@media (min-width: 601px) and (max-width: 900px) {
+  .nav-drawer {
+    inset: 0 0 0 auto;
+    width: min(420px, 80vw);
+    height: 100%;
+    justify-content: flex-start;
+    padding: 5rem 2.5rem 3rem;
+    box-shadow: -12px 0 40px rgba(0,0,0,0.6);
+  }
+  .drawer-close { top: 1.125rem; right: 1.25rem; }
+}
+
+/* ── ≥ 901px (desktop): full nav links, no burger ── */
+@media (min-width: 901px) {
+  .nav-sound-li { display: list-item; }
+  nav .nav-sound-mobile { display: none; }
+  .nav-cta-desktop { display: inline-flex; }
+  .burger { display: none; }
+}

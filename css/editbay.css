@@ -1,0 +1,581 @@
+/* ============================================================
+   editbay.css — "THE WORK" → The Edit Bay
+   ============================================================ */
+
+.editbay {
+  background: var(--bg);
+  color: var(--ink);
+  padding: 0 0 clamp(3rem, 8vh, 5rem);
+  position: relative;
+  overflow: hidden;
+  contain: layout paint;
+}
+
+/* Faint timeline grid */
+.editbay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(to right, rgba(255,255,255,0.018) 1px, transparent 1px);
+  background-size: 80px 100%;
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+/* ── Section header — mobile: stacked, ≥701: title + meta side-by-side ── */
+.editbay-header {
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: start;
+  gap: 2rem;
+  padding-block: clamp(2rem, 5vh, 3.5rem);
+  padding-inline: 0;
+}
+@media (min-width: 701px) {
+  .editbay-header {
+    grid-template-columns: 1fr auto;
+    align-items: end;
+  }
+}
+
+/* Title entry — CSS-native reveal driven by IntersectionObserver class
+   toggle (.is-title-revealed on .editbay). No GSAP/ScrollTrigger here:
+   CSS transitions on iOS WebKit are dramatically more reliable than
+   tween position math, and this title is the canary for the whole
+   motion system — it must never get stuck. */
+.editbay-title .word { display: block; overflow: hidden; }
+.editbay-title .word > span {
+  display: inline-block;
+  will-change: transform;
+  transform: translateY(110%);
+  transition: transform 0.9s cubic-bezier(0.76, 0, 0.24, 1);
+}
+.editbay.is-title-revealed .editbay-title .word > span {
+  transform: translateY(0);
+}
+/* Stagger: second word arrives 0.1s after the first. */
+.editbay.is-title-revealed .editbay-title .word:nth-child(2) > span {
+  transition-delay: 0.1s;
+}
+.editbay-title .dot { color: var(--accent); }
+
+.editbay-meta {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  color: var(--ink-2);
+  text-transform: uppercase;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.editbay-meta-line { display: flex; align-items: center; justify-content: flex-start; gap: 0.625rem; }
+.editbay-meta-num { color: var(--accent-2); }
+
+@media (min-width: 701px) {
+  .editbay-meta { text-align: right; }
+  .editbay-meta-line { justify-content: flex-end; }
+}
+
+/* ── Filter pills ── */
+.editbay-filters {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0;
+  margin-bottom: 1.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.editbay-filters-label { color: var(--ink-3); margin-right: 0.5rem; }
+
+.editbay-filter {
+  background: none;
+  border: none;
+  color: var(--ink-2);
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  cursor: pointer;
+  padding: 0.375rem 0.5rem;
+  position: relative;
+  transition: color var(--dur-fast) var(--ease-glide);
+}
+.editbay-filter::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0.5rem; right: 0.5rem;
+  height: 1px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--dur-fast) var(--ease-glide);
+}
+.editbay-filter:hover { color: var(--accent-2); }
+.editbay-filter.is-active { color: var(--ink); }
+.editbay-filter.is-active::after { transform: scaleX(1); }
+.editbay-filter-sep { color: var(--ink-3); user-select: none; }
+
+/* ── Sub-category filters ── */
+.editbay-subfilters {
+  display: none;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0;
+  margin-top: -0.75rem;
+  margin-bottom: 1.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.editbay-subfilters.visible { display: flex; }
+
+.editbay-subfilter {
+  background: none; border: none;
+  color: var(--ink-3);
+  font: inherit; letter-spacing: inherit; text-transform: inherit;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  position: relative;
+  transition: color var(--dur-fast) var(--ease-glide);
+}
+.editbay-subfilter:hover { color: var(--ink-2); }
+.editbay-subfilter.is-active { color: var(--accent-2); }
+
+/* ── Player area ── */
+/* Stage layout — mobile: single column, tracks first; ≥1101: two columns. */
+.editbay-stage {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  padding: 0;
+  align-items: start;
+}
+.editbay-tracks { order: 0; }
+
+@media (min-width: 1101px) {
+  .editbay-stage {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  }
+  .editbay-tracks { order: -1; }
+}
+
+/* ── Video player ──
+   Entry (opacity / scale) is owned by motion-system.js.
+   Cursor: pointer by default (touch UX); custom cursor (none) on ≥701. */
+.editbay-video {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: #000;
+  overflow: hidden;
+  border: 1px solid var(--rule);
+  cursor: pointer;
+}
+@media (min-width: 701px) {
+  .editbay-video { cursor: none; }
+}
+.editbay-video video, .editbay-video iframe { width: 100%; height: 100%; display: block; object-fit: cover; }
+
+/* CSS fullscreen fallback — used when the Fullscreen API isn't available
+   (notably iOS Safari iframes / YouTube). Covers the viewport; our custom
+   controls stay overlaid. Escape key, tapping the FS button, or the
+   dedicated close affordance all toggle it off. */
+.editbay-video.is-css-fullscreen,
+.editbay-video.is-native-fullscreen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  aspect-ratio: auto;
+  border: none;
+  cursor: auto;
+}
+.editbay-video.is-css-fullscreen video,
+.editbay-video.is-css-fullscreen iframe,
+.editbay-video.is-native-fullscreen video,
+.editbay-video.is-native-fullscreen iframe {
+  object-fit: contain;
+}
+/* Hide page scroll while a video is in CSS fullscreen. */
+html:has(.editbay-video.is-css-fullscreen) { overflow: hidden; }
+
+/* FS button icon swap — expand by default, collapse in fullscreen.
+   Default state: only expand visible. Fullscreen state: only collapse. */
+.epc-fs-btn { position: relative; }
+.epc-fs-collapse { display: none; }
+.editbay-video.is-css-fullscreen .epc-fs-expand,
+.editbay-video.is-native-fullscreen .epc-fs-expand { display: none; }
+.editbay-video.is-css-fullscreen .epc-fs-collapse,
+.editbay-video.is-native-fullscreen .epc-fs-collapse { display: block; }
+
+/* Larger tap target for the FS button while in fullscreen — finger-friendly
+   on phones, where exit affordance matters most. */
+.editbay-video.is-css-fullscreen .epc-fs-btn {
+  padding: 0.75rem;
+  background: rgba(11, 11, 12, 0.55);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  border-radius: 2px;
+}
+
+.editbay-video-content {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  opacity: 1;
+  transition: opacity 220ms var(--ease-glide);
+}
+.editbay-video.is-swapping .editbay-video-content { opacity: 0; }
+
+/* Corner brackets — mobile: 22px, ≥701: 28px */
+.editbay-corners { position: absolute; inset: 0; pointer-events: none; z-index: 3; }
+.editbay-corners svg {
+  position: absolute; width: 22px; height: 22px;
+  stroke: rgba(239, 234, 224, 0.55); stroke-width: 1.25; fill: none;
+}
+@media (min-width: 701px) {
+  .editbay-corners svg { width: 28px; height: 28px; }
+}
+.editbay-corners .tl { top: 14px;    left: 14px;    }
+.editbay-corners .tr { top: 14px;    right: 14px;   transform: rotate(90deg);  }
+.editbay-corners .br { bottom: 14px; right: 14px;   transform: rotate(180deg); }
+.editbay-corners .bl { bottom: 14px; left: 14px;    transform: rotate(270deg); }
+.editbay-corners svg path {
+  stroke-dasharray: 56; stroke-dashoffset: 56;
+  /* draw-on owned by motion-system.js */
+}
+
+/* Rule of thirds */
+.editbay-thirds {
+  position: absolute; inset: 0; pointer-events: none; z-index: 3;
+  opacity: 0; transition: opacity 300ms var(--ease-glide);
+}
+.editbay-video:hover .editbay-thirds { opacity: 1; }
+.editbay-video.is-playing .editbay-thirds { opacity: 0; }
+.editbay-thirds::before, .editbay-thirds::after {
+  content: ''; position: absolute; left: 14px; right: 14px;
+  height: 1px; background: rgba(239, 234, 224, 0.18);
+}
+.editbay-thirds::before { top: 33.33%; }
+.editbay-thirds::after  { top: 66.66%; }
+
+/* Readout overlay */
+.editbay-readout {
+  position: absolute; top: 14px; left: 14px; z-index: 4;
+  font-family: var(--font-mono); font-size: 0.625rem;
+  letter-spacing: 0.14em; color: var(--accent-2); text-transform: uppercase;
+  display: flex; align-items: center; gap: 0.5rem;
+  pointer-events: none;
+  background: rgba(11, 11, 12, 0.4); backdrop-filter: blur(4px);
+  padding: 0.25rem 0.5rem;
+}
+.editbay-readout::before {
+  content: ''; width: 5px; height: 5px; border-radius: 50%;
+  background: var(--accent);
+  animation: rec-pulse 1.6s infinite;
+}
+
+/* Scrub bar */
+.editbay-scrub {
+  position: absolute; left: 14px; right: 14px; bottom: 14px;
+  height: 1px; background: rgba(239, 234, 224, 0.2); z-index: 4;
+}
+.editbay-scrub::after {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+  width: 35%; background: var(--accent);
+}
+.editbay-scrub-handle {
+  position: absolute; left: 35%; top: -3px;
+  width: 7px; height: 7px;
+  background: var(--accent); border-radius: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 0 8px rgba(255, 59, 0, 0.5);
+}
+.editbay-scrub-time {
+  position: absolute; bottom: 8px; right: 14px;
+  font-family: var(--font-mono); font-size: 0.625rem;
+  letter-spacing: 0.1em; color: var(--ink-2); z-index: 4;
+}
+
+/* Mute button */
+.editbay-mute-btn {
+  position: absolute; top: 14px; right: 52px;
+  z-index: 5; width: 30px; height: 30px;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(11, 11, 12, 0.60);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(239, 234, 224, 0.18);
+  color: var(--ink); cursor: pointer;
+  transition: background 0.2s var(--ease-glide), border-color 0.2s var(--ease-glide);
+}
+.editbay-mute-btn:hover { background: rgba(239, 234, 224, 0.12); border-color: rgba(239, 234, 224, 0.35); }
+.editbay-mute-btn.is-muted .eb-wave-1,
+.editbay-mute-btn.is-muted .eb-wave-2  { display: none; }
+.editbay-mute-btn:not(.is-muted) .eb-mute-x,
+.editbay-mute-btn:not(.is-muted) .eb-mute-x2 { display: none; }
+
+/* Placeholder */
+.editbay-placeholder {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 0.875rem; background: #0a0a0b;
+}
+.editbay-placeholder-icon { font-size: 1.75rem; opacity: 0.18; color: var(--ink); }
+.editbay-placeholder-label {
+  font-family: var(--font-mono); font-size: 0.625rem;
+  letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-3);
+}
+
+/* ── Unified player controls (epc) ── */
+.epc {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 5;
+  padding: 2.5rem 14px 10px;
+  background: linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0) 100%);
+  opacity: 0; transition: opacity 220ms var(--ease-glide); pointer-events: none;
+}
+.editbay-video:hover .epc,
+.editbay-video.epc-visible .epc { opacity: 1; pointer-events: all; }
+
+.epc-progress {
+  position: relative; height: 3px;
+  background: rgba(255,255,255,0.18);
+  /* Classic pointer — most familiar affordance for a draggable seek bar */
+  cursor: pointer; margin-bottom: 9px; border-radius: 2px;
+  transition: background 180ms var(--ease-glide);
+}
+/* Invisible hit area — extends ±10px vertically (~23px total) so the bar is
+   easy to grab without touching the visual line height. Layout unaffected
+   because the pseudo is absolutely positioned. .epc-filled / .epc-handle
+   have pointer-events: none, so clicks fall through to this pseudo and
+   bubble to the .epc-progress mousedown listener. */
+.epc-progress::before {
+  content: '';
+  position: absolute;
+  inset: -10px 0;
+}
+/* Subtle hover feedback without changing the line's height */
+.epc-progress:hover { background: rgba(255,255,255,0.28); }
+.epc-filled {
+  position: absolute; left: 0; top: 0; bottom: 0;
+  width: 0%; background: var(--accent); border-radius: 2px;
+  pointer-events: none; transition: width 80ms linear;
+}
+.epc-handle {
+  position: absolute; top: 50%; left: 0%;
+  width: 11px; height: 11px;
+  background: var(--accent); border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none; opacity: 0; transition: opacity 150ms;
+}
+.epc-progress:hover .epc-handle { opacity: 1; }
+
+.epc-bar {
+  display: flex; align-items: center; gap: 6px;
+  /* Reset cursor here so the bar background shows native arrow instead of inheriting
+     `cursor: none` from .editbay-video. Buttons override with `pointer`. */
+  cursor: default;
+}
+.epc-btn {
+  background: none; border: none;
+  color: rgba(255,255,255,0.82);
+  cursor: pointer; padding: 10px;
+  min-width: 42px; min-height: 42px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: color 150ms, background 150ms; border-radius: 3px;
+}
+.epc-btn:hover { color: #fff; background: rgba(255,255,255,0.1); }
+
+.epc-play-btn .epc-icon-pause { display: none; }
+.epc-play-btn.is-playing .epc-icon-play  { display: none; }
+.epc-play-btn.is-playing .epc-icon-pause { display: flex; }
+
+.epc-time {
+  font-family: var(--font-mono); font-size: 0.5625rem;
+  letter-spacing: 0.1em; color: rgba(255,255,255,0.65);
+  white-space: nowrap; user-select: none;
+}
+.epc-spacer { flex: 1; }
+
+.epc-vol-group { display: flex; align-items: center; gap: 4px; }
+.epc-vol-slider {
+  -webkit-appearance: none; appearance: none;
+  width: 56px; height: 3px;
+  background: rgba(255,255,255,0.2); border-radius: 2px;
+  cursor: pointer; outline: none; transition: width 200ms var(--ease-glide);
+}
+.epc-vol-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 10px; height: 10px;
+  border-radius: 50%; background: var(--accent); cursor: pointer;
+}
+.epc-vol-slider::-moz-range-thumb {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--accent); border: none; cursor: pointer;
+}
+.epc-vol-btn.is-muted .ev-w1,
+.epc-vol-btn.is-muted .ev-w2  { display: none; }
+.epc-vol-btn:not(.is-muted) .ev-x1,
+.epc-vol-btn:not(.is-muted) .ev-x2 { display: none; }
+
+.editbay-video-content video.is-portrait { object-fit: contain; }
+.editbay-video-content iframe { pointer-events: none; }
+/* Hide native cursor — the custom "▶ Play / ⏸ Pause" cursor handles the main video area */
+.editbay-click-play { position: absolute; inset: 0; z-index: 4; cursor: none; }
+
+/* ── Cursor restore inside [data-cursor-hide] (player controls) ──
+   hero.css runs two global rules:
+     1.  `*, *::before, *::after { cursor: none !important }`   — kills cursor everywhere
+     2.  `[data-cursor-hide] *  { cursor: auto !important }`    — restores inside hide-zones
+
+   Rule 2 only matches real elements — pseudo-elements stay at `cursor: none`
+   from rule 1. That's why the seek bar lost its pointer cursor: the
+   `.epc-progress::before` extended hit-area (±10px above/below the 3px bar)
+   still inherited the global `none`, and that's the area the pointer is
+   actually in most of the time.
+
+   Restore here with matching specificity + `!important` (required to win
+   against the global rule — `!important` is already the cursor-system
+   contract). Cover both the element AND its ::before pseudo. */
+@media (hover: hover) and (pointer: fine) {
+  [data-cursor-hide] .epc-progress,
+  [data-cursor-hide] .epc-progress::before,
+  [data-cursor-hide] .epc-btn,
+  [data-cursor-hide] .epc-vol-slider {
+    cursor: pointer !important;
+  }
+  /* Active seek-drag — lock cursor to horizontal-resize across the whole
+     document so it doesn't flicker back to default when the pointer
+     leaves the 3px-tall bar mid-drag. Class is toggled by editbay.js. */
+  html.is-editbay-seeking,
+  html.is-editbay-seeking *,
+  html.is-editbay-seeking *::before,
+  html.is-editbay-seeking *::after {
+    cursor: ew-resize !important;
+  }
+}
+
+/* ── Track list ── */
+.editbay-tracks { display: flex; flex-direction: column; gap: 0; }
+
+.editbay-tracks-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 0 0.875rem;
+  border-bottom: 1px solid var(--rule);
+  font-family: var(--font-mono); font-size: 0.6875rem;
+  letter-spacing: 0.14em; color: var(--ink-2); text-transform: uppercase;
+}
+.editbay-tracks-count { color: var(--accent-2); }
+
+.editbay-track {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) auto;
+  align-items: center; gap: 0.625rem;
+  padding: 0.875rem 0.75rem 0.875rem 0;
+  border-bottom: 1px solid var(--rule);
+  cursor: pointer; position: relative;
+  transition: background var(--dur-fast) var(--ease-glide);
+  /* Entry (fade + slide-up + stagger) owned by motion-system.js */
+}
+@media (min-width: 701px) {
+  .editbay-track {
+    grid-template-columns: 32px minmax(0, 1fr) auto;
+    gap: 0.875rem;
+  }
+}
+
+.editbay-track::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+  width: 2px; background: var(--accent);
+  transform: scaleY(0); transform-origin: top center;
+  transition: transform var(--dur-fast) var(--ease-glide);
+}
+.editbay-track:hover { background: var(--bg-2); }
+.editbay-track:hover::before, .editbay-track.is-active::before { transform: scaleY(1); }
+.editbay-track:hover .editbay-track-num, .editbay-track.is-active .editbay-track-num { color: var(--accent); }
+.editbay-track:hover .editbay-track-title, .editbay-track.is-active .editbay-track-title {
+  transform: translateX(6px);
+  color: var(--accent-2);
+}
+
+.editbay-track-num {
+  font-family: var(--font-mono); font-size: 0.6875rem;
+  letter-spacing: 0.1em; color: var(--ink-3); padding-left: 0.625rem;
+  transition: color var(--dur-fast) var(--ease-glide);
+}
+
+.editbay-track-mid { display: flex; flex-direction: column; gap: 0.375rem; min-width: 0; }
+
+.editbay-track-title {
+  font-family: var(--font-display); font-weight: 400;
+  font-size: clamp(1rem, 1.6vw, 1.25rem); letter-spacing: 0.01em;
+  color: var(--ink-2); text-transform: uppercase;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  transition: transform var(--dur-fast) var(--ease-glide), color var(--dur-fast) var(--ease-glide);
+}
+
+.editbay-track-wave { width: 100%; height: 18px; display: block; }
+.editbay-track-wave rect { fill: var(--ink-3); transition: fill var(--dur-fast) var(--ease-glide); }
+.editbay-track:hover .editbay-track-wave rect.lit,
+.editbay-track.is-active .editbay-track-wave rect.lit { fill: var(--accent); }
+.editbay-track:hover .editbay-track-wave rect,
+.editbay-track.is-active .editbay-track-wave rect { fill: var(--ink-2); }
+
+.editbay-track-meta {
+  font-family: var(--font-mono); font-size: 0.6875rem;
+  letter-spacing: 0.1em; color: var(--ink-3);
+  text-align: right; white-space: nowrap;
+}
+
+/* More button */
+.editbay-more-btn {
+  display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+  width: 100%; padding: 0.875rem 0;
+  background: none; border: none; border-top: 1px solid var(--rule);
+  font-family: var(--font-mono); font-size: 0.6875rem;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--ink-2); cursor: pointer;
+  transition: color var(--dur-fast) var(--ease-glide);
+}
+.editbay-more-btn:hover { color: var(--accent); }
+.editbay-more-count { color: var(--accent-2); }
+
+/* ── Mobile/Tablet (default, < 1101) — video accordions below active track.
+   editbay.js moves the .editbay-video into the .editbay-video-mobile-slot
+   right under the active <article.editbay-track>. The two-column desktop
+   stage layout takes over at ≥1101 (see .editbay-stage media query above). */
+.editbay-stage > .editbay-video {
+  display: none;
+}
+
+/* Accordion slot — grid-template-rows: 0fr → 1fr animates to the video's
+   natural aspect-ratio height with no JS measurement. */
+.editbay-video-mobile-slot {
+  display: grid;
+  grid-template-rows: 0fr;
+  overflow: hidden;
+  opacity: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  transition:
+    grid-template-rows 480ms cubic-bezier(0.22, 1, 0.36, 1),
+    padding-top        480ms cubic-bezier(0.22, 1, 0.36, 1),
+    padding-bottom     480ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity            320ms cubic-bezier(0.22, 1, 0.36, 1) 60ms;
+}
+.editbay-video-mobile-slot > .editbay-video {
+  min-height: 0;
+  overflow: hidden;
+}
+.editbay-video-mobile-slot.is-open {
+  grid-template-rows: 1fr;
+  padding-top: 0.875rem;
+  padding-bottom: 1.25rem;
+  opacity: 1;
+}
+
+/* ── ≥ 1101px — desktop stage layout reveals the video, accordion off ── */
+@media (min-width: 1101px) {
+  .editbay-stage > .editbay-video { display: block; }
+  .editbay-video-mobile-slot { display: none; }
+}

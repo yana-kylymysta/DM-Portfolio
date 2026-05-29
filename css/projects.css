@@ -1,0 +1,88 @@
+/* ============================================================
+   projects.css — Selected Work table
+   ============================================================ */
+/* padding from layout.css */
+
+.projects-header {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  margin-bottom: 3rem;
+}
+
+.projects-title {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 6vw, 5.25rem);
+  line-height: 0.92;
+  margin-top: 1rem;
+  color: var(--ink);
+}
+.projects-title .accent { color: var(--accent); }
+
+.view-all {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink);
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 0.125rem;
+  cursor: pointer;
+  transition: color var(--dur-fast), border-color var(--dur-fast);
+}
+.view-all:hover { color: var(--accent-2); border-color: var(--accent-2); }
+
+.project-row {
+  display: grid;
+  grid-template-columns: 64px 1fr 200px 200px 80px;
+  align-items: center;
+  padding: 1.75rem 1rem 1.75rem 0;
+  border-bottom: 1px solid var(--rule);
+  cursor: pointer;
+  transition: background var(--dur-fast), padding-left var(--dur-fast);
+  gap: 1.5rem;
+  min-width: 0;
+  color: var(--ink);
+}
+.project-row:first-child { border-top: 1px solid var(--rule); }
+.project-row:hover { background: var(--bg-2); padding-left: 0.75rem; }
+.project-row:hover .project-title { color: var(--accent-2); }
+
+.project-index {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: var(--accent-2);
+}
+
+.project-title {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--ink);
+  transition: color var(--dur-fast);
+}
+
+.project-category,
+.project-cat,
+.project-year {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+.project-role {
+  font-size: 0.8125rem;
+  font-weight: 300;
+  color: var(--ink-2);
+}
+
+.project-arrow {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  text-align: right;
+  opacity: 0;
+  transition: opacity var(--dur-fast);
+  color: var(--ink);
+}
+.project-row:hover .project-arrow { opacity: 1; }

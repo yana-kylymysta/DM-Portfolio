@@ -1,0 +1,123 @@
+/* ============================================================
+   layout.css — Shared layout utilities
+
+   Spacing system (used as utilities on the markup):
+     .container          → horizontal page gutter (var(--pad-page))
+     .section-pad-y      → symmetric vertical section rhythm
+     .section-pad-top    → top-only section rhythm
+     .section-pad-bottom → bottom-only section rhythm
+
+   Mobile-first: vertical rhythm starts at a fixed 3.75rem; widens
+   to var(--pad-section-v) at ≥1200px.
+   ============================================================ */
+
+/* ── Section background + color reset ── */
+section.about,
+section.philosophy,
+section.services,
+section.process,
+section.testimonials,
+section.cta-block,
+section.projects,
+section.reel-statement,
+section.editbay {
+  background: var(--bg);
+  color: var(--ink);
+  overflow: clip;
+}
+
+/* ── Horizontal page gutter utility ── */
+.container {
+  padding-inline: var(--pad-page);
+  width: 100%;
+}
+
+/* Sections that manage their own internal horizontal padding */
+/* .hero-container,
+.about > .container {
+  padding-inline: 0;
+} */
+
+/* ── Vertical section rhythm — mobile-first defaults ── */
+.section-pad-y      { padding-block: 3.75rem; }
+.section-pad-top    { padding-top: 3.75rem; }
+.section-pad-bottom { padding-bottom: 3.75rem; }
+
+/* CTA columns: kept on the column elements because .cta-body sits
+   OUTSIDE the .container wrapper. */
+.cta-left,
+.cta-right { padding: 3.75rem var(--pad-page); }
+
+/* ── Shared section h2 ── */
+section h2 {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 6vw, 5.25rem);
+  line-height: 0.92;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin-top: 1rem;
+}
+
+/* ── Section header row pattern ── */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 3rem;
+  gap: 2rem;
+}
+
+/* ── Track header (DAW-style section label) ── */
+section .track-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+  padding-block: 1.25rem 1rem;
+  padding-inline: 0;
+  border-top: none;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  color: var(--ink-2);
+  text-transform: uppercase;
+  position: relative;
+  z-index: 5;
+  background: var(--bg);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+section .track-header-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+}
+
+/* About's .container has no padding-inline, so its track-header
+   needs to carry the page gutter itself. */
+section.about .track-header {
+  padding-inline: var(--pad-page);
+}
+
+/* ── Ticker + shared inline sections ── */
+.ticker,
+.ticker-track,
+.ticker-row { background: var(--bg); color: var(--ink); }
+
+/* ── CTA big text ── */
+.cta-big { font-size: clamp(4rem, 9vw, 8.75rem); line-height: 0.88; }
+
+/* ── Section label ── */
+.section-label,
+[class*="section-label"] { color: var(--ink-2); }
+
+/* ── ≥ 1200px — wider vertical rhythm for spacious desktop ── */
+@media (min-width: 1200px) {
+  .section-pad-y      { padding-block: var(--pad-section-v); }
+  .section-pad-top    { padding-top: var(--pad-section-v); }
+  .section-pad-bottom { padding-bottom: var(--pad-section-v); }
+}

@@ -1,0 +1,105 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  /* ── Design tokens ── */
+  --bg:   #0B0B0C;
+  --bg-2: #131316;
+  --bg-3: #1A1A1E;
+  --ink:   #EFEAE0;
+  --ink-2: #bdb5a5;
+  --ink-3: #6B655E;
+  --rule:  #636366;
+  --accent:   #FF3B00;
+  --accent-2: #5BE0C8;
+  --section-line: #3a3833;
+
+  --font-display: 'Bebas Neue', 'Barlow Condensed', sans-serif;
+  --font-body:    'Barlow', -apple-system, sans-serif;
+  --font-mono:    'JetBrains Mono', 'Space Mono', ui-monospace, monospace;
+
+  --ease-cut:   cubic-bezier(0.7,0,0.2,1);
+  --ease-glide: cubic-bezier(0.16,1,0.3,1);
+  --ease-drop:  cubic-bezier(0.64,0,0.78,0);
+
+  --dur-fast: 240ms;
+  --dur-mid:  600ms;
+  --dur-slow: 1200ms;
+
+  /* ── MOTION SYSTEM (entry animations) ─────────────────────────
+     Three patterns, all driven by motion-system.js + ScrollTrigger.
+     CSS owns the *initial hidden state* only — JS owns the motion.
+     Keep these tokens in sync with js/motion-system.js. */
+  --ease-reveal: cubic-bezier(0.76, 0, 0.24, 1);   /* sharp cut, brutalist */
+  --ease-fade:   cubic-bezier(0.22, 1, 0.36, 1);   /* settled body text */
+  --ease-slide:  cubic-bezier(0.33, 1, 0.68, 1);   /* small/label glide */
+
+  --dur-reveal: 0.9s;   /* clip-path headline */
+  --dur-fade:   0.7s;   /* body text, blocks */
+  --dur-slide:  0.55s;  /* labels, micro-elements */
+  --stagger:    0.08s;  /* default list cadence */
+
+  /* ── Spacing ── */
+  --pad-page:      clamp(1.25rem, 4vw, 3.5rem);  /* horizontal page gutter */
+  --pad-section-v: clamp(3.75rem, 8vh, 5rem);    /* vertical section rhythm */
+  --rule-w: 1px;
+
+  /* ── Nav height ──────────────────────────────────────────────
+     Single source of truth for the fixed nav's measured height.
+     Used by:
+       - .hero { padding-top } so content clears the fixed bar
+       - .hero::before { background-position } so the grid's first
+         row aligns flush with the bar's bottom edge (no cut sliver).
+     Overridden per breakpoint in responsive.css. */
+  --nav-h: 4.5rem;
+
+  /* ── BREAKPOINTS ─────────────────────────────────────────────
+     Canonical: 600 (phone) / 900 (tablet) / 1200 (large desktop).
+     Pattern: `max-width: 600px` for phone, `max-width: 900px` for tablet,
+              `min-width: 901px` for desktop, `min-width: 1200px` for large.
+     A handful of components use additional breakpoints for component-specific
+     reasons (e.g. video-reel ultra-wide, testimonials wider grid). Don't
+     introduce new ones unless the component truly demands it. */
+
+  /* ── Legacy aliases — kept for backward-compat ── */
+  --off-white:     var(--ink);
+  --black:         var(--bg);
+  --mid:           var(--ink-2);
+  --light-border:  var(--rule);
+  --serif-display: var(--font-display);
+  --mono:          var(--font-mono);
+  --body:          var(--font-body);
+}
+
+html { font-size: 16px; }
+
+/* Lenis smooth scroll */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: clip; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 1rem;
+  line-height: 1.6;
+  overflow-x: hidden;
+  cursor: auto;
+}
+
+a { color: inherit; text-decoration: none; }
+
+::selection { background: var(--accent); color: var(--bg); }
+
+a:not(.btn-primary):not(.hero-stamp):not(.nav-cta):not(.editbay-filter):not(.editbay-track):hover {
+  color: var(--accent-2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms;
+    animation-iteration-count: 1;
+    transition-duration: 0.01ms;
+  }
+}

@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!-- Anti-FOUC: pre-hide all motion targets synchronously, BEFORE the browser
+     paints. Removed by motion-system.js once GSAP has set its own inline
+     start-states. Skipped on prefers-reduced-motion (a11y) — all content
+     paints visible from frame 1. If JS is disabled, class is never added →
+     content stays visible (no noscript fallback needed). -->
+<script>
+if (!window.matchMedia || !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  document.documentElement.classList.add('motion-loading');
+}
+</script>
+<noscript>
+  <style>
+    /* No-JS fallback: editbay title is parked via static CSS — un-park it. */
+    .editbay-title .word > span { transform: translateY(0) !important; }
+  </style>
+</noscript>
+<meta name="description" content="Music editor and sound designer helping filmmakers, brands, and creators make their audience feel something. 5+ years, 80+ projects, 100% JSS on Upwork. Available worldwide.">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dmytro Mushynskyi — Music Editor & Sound Designer</title>
+
+<!-- Open Graph -->
+<meta property="og:type"        content="website">
+<meta property="og:title"       content="Dmytro Mushynskyi — Music Editor &amp; Sound Designer">
+<meta property="og:description" content="Music editor and sound designer helping filmmakers, brands, and creators make their audience feel something. 5+ years · 80+ projects · 100% JSS on Upwork.">
+<meta property="og:url"         content="https://dmytro-mushynskiy.netlify.app/"><!-- TODO: replace with real URL -->
+<meta property="og:image"       content="https://dmytro-mushynskiy.netlify.app/assets/images/og-image.jpg"><!-- TODO: create 1200×630px og-image.jpg -->
+<!-- Twitter Card -->
+<meta name="twitter:card"        content="summary_large_image">
+<meta name="twitter:title"       content="Dmytro Mushynskyi — Music Editor &amp; Sound Designer">
+<meta name="twitter:description" content="Music editor and sound designer helping filmmakers, brands, and creators make their audience feel something. 5+ years · 80+ projects · 100% JSS on Upwork.">
+<meta name="twitter:image"       content="https://dmytro-mushynskiy.netlify.app/assets/images/philosophy-bg.jpg"><!-- TODO: same file as og:image -->
+<!-- Preconnect to font origins to resolve DNS/TLS early -->
+<!-- Favicon — TODO: replace href with real .ico / .png file path -->
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Preconnect for YouTube embeds (editbay player) — saves ~200–400 ms on first play -->
+<link rel="preconnect" href="https://www.youtube-nocookie.com">
+<!-- Fonts: display=swap — show fallback immediately, swap when font loads (better LCP than display=block which causes FOIT) -->
+<!-- Preload as style starts fetching the Google Fonts CSS earlier in parallel with HTML parsing -->
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@700;800&family=Barlow:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Mono:wght@400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@700;800&family=Barlow:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Mono:wght@400;700&display=swap">
+<!-- Preload LCP candidate: reel section poster (above-the-fold for users who scroll past hero) -->
+<link rel="preload" as="image" href="assets/video/video-poster.webp" type="image/webp" fetchpriority="high">
+<!-- ═══════════════════════════════════════════════════════════
+     ANALYTICS — ВСТАВИТИ ПЕРЕД ДЕПЛОЄМ
+     ═══════════════════════════════════════════════════════════ -->
+<!-- GA4: вставити тег тут -->
+<!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-XXXXXXXXXX');
+</script> -->
+
+<!-- Meta Pixel: вставити тут -->
+<!-- <script>
+!function(f,b,e,v,n,t,s){...}(window,document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', 'YOUR_PIXEL_ID');
+fbq('track', 'PageView');
+</script> -->
+<!-- Stylesheets — loaded in parallel (HTTP/2 multiplexing).
+     Order matches the cascade defined previously in css/main.css's @import chain.
+     This replaces the old @import sequence which forced 18 sequential round-trips. -->
+<link rel="stylesheet" href="./css/base.css">
+<link rel="stylesheet" href="./css/layout.css">
+<link rel="stylesheet" href="./css/session.css">
+<link rel="stylesheet" href="./css/nav.css">
+<link rel="stylesheet" href="./css/hero.css">
+<link rel="stylesheet" href="./css/ticker.css">
+<link rel="stylesheet" href="./css/sections.css">
+<link rel="stylesheet" href="./css/video-reel.css">
+<link rel="stylesheet" href="./css/projects.css">
+<link rel="stylesheet" href="./css/sound-btn.css">
+<link rel="stylesheet" href="./css/testimonials.css">
+<link rel="stylesheet" href="./css/cta-footer.css">
+<link rel="stylesheet" href="./css/animations.css">
+<link rel="stylesheet" href="./css/responsive.css">
+<link rel="stylesheet" href="./css/about.css">
+<link rel="stylesheet" href="./css/process.css">
+<link rel="stylesheet" href="./css/editbay.css">
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════
+     v5 PERSISTENT SESSION UI — timecode + scroll playhead
+     ═══════════════════════════════════════════════════════════ -->
+<div class="session-timecode" aria-hidden="true">
+  <span class="session-timecode-dot"></span>
+  <span class="session-timecode-value">00:00:00:00</span>
+</div>
+<div class="session-playhead" aria-hidden="true"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="container nav-container">
+    <a href="#" class="nav-logo">DM Studio</a>
+    <ul class="nav-links">
+      <li><a href="#about">About me</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#work">Work</a></li>
+      <li><a href="#contact">Contact</a></li>
+      <li class="nav-sound-li">
+        <button class="nav-sound-btn" id="nav-sound-btn" aria-label="Toggle sound" title="Sound off">
+          <div class="nav-speaker-wrap" aria-hidden="true">
+            <svg class="nav-speaker-icon" width="18" height="18" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path class="speaker-body" d="M2 6.5H5L9 3V15L5 11.5H2V6.5Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" fill="none"/>
+              <path class="speaker-wave-1" d="M11.5 6.8C12.3 7.5 12.8 8.2 12.8 9C12.8 9.8 12.3 10.5 11.5 11.2" stroke="currentColor" stroke-width="1.4" stroke-linecap="square" fill="none"/>
+              <path class="speaker-wave-2" d="M13.5 4.5C15.1 5.9 16 7.4 16 9C16 10.6 15.1 12.1 13.5 13.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="square" fill="none"/>
+              <line class="speaker-mute-line" x1="2" y1="4" x2="13" y2="14" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"/>
+            </svg>
+            <span class="nav-speaker-ripple r1" aria-hidden="true"></span>
+            <span class="nav-speaker-ripple r2" aria-hidden="true"></span>
+          </div>
+        </button>
+      </li>
+    </ul>
+    <div style="display:flex;align-items:center;gap:0.75rem;">
+      <!-- Sound toggle: tablet only 601–900px (desktop version is in nav-links) -->
+      <button class="nav-sound-btn nav-sound-mobile" id="nav-sound-btn-mobile" aria-label="Toggle sound" title="Sound off">
+        <div class="nav-speaker-wrap" aria-hidden="true">
+          <svg class="nav-speaker-icon" width="18" height="18" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path class="speaker-body" d="M2 6.5H5L9 3V15L5 11.5H2V6.5Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" fill="none"/>
+            <path class="speaker-wave-1" d="M11.5 6.8C12.3 7.5 12.8 8.2 12.8 9C12.8 9.8 12.3 10.5 11.5 11.2" stroke="currentColor" stroke-width="1.4" stroke-linecap="square" fill="none"/>
+            <path class="speaker-wave-2" d="M13.5 4.5C15.1 5.9 16 7.4 16 9C16 10.6 15.1 12.1 13.5 13.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="square" fill="none"/>
+            <line class="speaker-mute-line" x1="2" y1="4" x2="13" y2="14" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"/>
+          </svg>
+          <span class="nav-speaker-ripple r1" aria-hidden="true"></span>
+          <span class="nav-speaker-ripple r2" aria-hidden="true"></span>
+        </div>
+      </button>
+      <!-- Hire on Upwork: tablet (601–900px) -->
+      <a href="https://www.upwork.com/freelancers/~01e0bd2dfc67aaf55a" class="nav-cta nav-upwork-tablet" target="_blank" rel="noopener noreferrer">Hire on Upwork ↗</a>
+      <!-- Hire on Upwork: desktop only (>900px) -->
+      <a href="https://www.upwork.com/freelancers/~01e0bd2dfc67aaf55a" class="nav-cta nav-cta-desktop" target="_blank" rel="noopener noreferrer">Hire on Upwork ↗</a>
+      <button class="burger" id="burger-btn" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- MOBILE DRAWER -->
+<div class="nav-drawer" id="nav-drawer" aria-hidden="true">
+  <button class="drawer-close" id="drawer-close-btn" aria-label="Close menu">
+    <svg class="drawer-close-icon" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="1" y1="1" x2="13" y2="13"/>
+      <line x1="13" y1="1" x2="1" y2="13"/>
+    </svg>
+  </button>
+  <div class="nav-drawer-label">Navigation</div>
+  <ul>
+    <li><a href="#about" class="drawer-link">About me</a></li>
+    <li><a href="#services" class="drawer-link">Services</a></li>
+    <li><a href="#work" class="drawer-link">Work</a></li>
+    <li><a href="#contact" class="drawer-link">Contact</a></li>
+  </ul>
+  <a href="https://www.upwork.com/freelancers/~01e0bd2dfc67aaf55a" class="nav-drawer-cta" target="_blank" rel="noopener noreferrer">Hire on Upwork ↗</a>
+</div>
+
+<!-- HERO — wrapped in scroll-scene for sticky parallax -->
+<div class="hero-scroll-scene">
+<section class="hero" id="top">
+  <!-- WOW: oscilloscope BG layer (below content, above grid backdrop) -->
+  <canvas id="dm-osc-bg" aria-hidden="true"></canvas>
+  <div class="container hero-container">
+    <!-- Top track header -->
+    <div class="hero-track-header">
+      <span class="hero-track-header-num">01</span>
+      <span>SESSION</span>
+      <span class="hero-track-header-rule"></span>
+      <span class="hero-track-header-rec">REC</span>
+    </div>
+    <!-- Main body -->
+    <div class="hero-body">
+      <!-- LEFT: text content -->
+      <div class="hero-left">
+        <!--<div class="hero-eyebrow">Music Editor &amp; Sound Designer · Kyiv / Remote</div>-->
+
+        <h1 class="hero-headline-new">
+          <span class="word"><span>I MAKE<br>YOUR SOUND</span></span>
+          <span class="word"><span data-text="FEELING.">MATTER<span class="dot">.</span></span></span>
+        </h1>
+
+        <!--<p class="hero-tagline">
+          Music editing &amp; sound design for film, advertising, and brand audio.
+          I find the exact sound, cut it to the bone, and let it do what words can&rsquo;t.
+        </p>--> 
+      </div>
+      <!-- RIGHT: waveform + circular CTA stamp -->
+      <div class="hero-right-new">
+        <div class="hero-waveform-new" aria-hidden="true">
+          <span class="hero-wave-label tl">CH 01</span>
+          <span class="hero-wave-label tr">+0.0 dB</span>
+          <span class="hero-wave-label bl">20 Hz</span>
+          <span class="hero-wave-label br">20 kHz</span>
+          <svg viewBox="0 0 600 200" preserveAspectRatio="none" width="100%" height="100%">
+            <path pathLength="1" d="M0 100
+                    C 30 100, 50 80, 70 80
+                    C 90 80, 100 130, 120 130
+                    C 140 130, 150 60, 175 60
+                    C 200 60, 215 140, 240 140
+                    C 270 140, 280 30, 310 30
+                    C 340 30, 355 170, 385 170
+                    C 410 170, 425 50, 450 50
+                    C 475 50, 490 130, 515 130
+                    C 540 130, 555 90, 580 90
+                    C 595 90, 600 100, 600 100" />
+          </svg>
+        </div>
+
+        <a href="#contact" class="hero-stamp" aria-label="Start a project">
+          <svg class="hero-stamp-text" viewBox="0 0 200 200" aria-hidden="true">
+            <defs>
+              <path id="stamp-circle" d="M 100, 100 m -76, 0 a 76,76 0 1,1 152,0 a 76,76 0 1,1 -152,0" />
+            </defs>
+            <text>
+              <textPath href="#stamp-circle" startOffset="0">
+                START A PROJECT &middot; NOW ROLLING &middot; START A PROJECT &middot; NOW ROLLING &middot;
+              </textPath>
+            </text>
+          </svg>
+          <span class="hero-stamp-core">
+            <span class="hero-stamp-play"></span>
+            <span class="hero-stamp-label">Contact Me</span>
+          </span>
+        </a>
+
+      </div>
+    </div>
+    <!-- Bottom row -->
+    <div class="hero-bottom-new">
+      <div class="hero-bottom-meter" aria-hidden="true">
+        <span class="lit"></span><span class="lit"></span><span class="lit"></span><span class="lit"></span>
+        <span></span><span></span><span></span>
+      </div>
+      <span class="hero-bottom-label">
+        Music Editor &amp; Sound Designer · Kyiv / Remote
+      </span>
+      <span class="hero-scroll-cue">
+        Scroll <span class="hero-scroll-cue-arrow">&darr;</span>
+      </span>
+    </div>
+  </div>
+</section>
+<!-- /HERO scroll-scene -->
+</div>
+<!-- TICKER -->
+
+<!-- ABOUT — Concept A: The Instrument -->
+<section class="about reveal" id="about">
+  
+    <div class="track-header">
+      <span class="track-header-num">02</span>
+      <span class="track-header-name">WHO</span>
+      <span class="track-header-rule"></span>
+      <span class="track-header-meta">CH 01 &middot; MONO</span>
+    </div>
+    <div class="about-content">
+      <div class="about-left">
+        <canvas class="about-wave-canvas" id="about-wave-canvas" aria-hidden="true"></canvas>
+        <div class="about-left-content">
+          <h2 class="about-headline about-title">
+            I DON'T<br>
+            ADD MUSIC.<br>
+            I BUILD<br>
+            <em>FEELING.</em>
+          </h2>
+          <div class="about-creed"
+            style="margin-top:2rem;font-family:var(--mono);font-size:0.7rem;letter-spacing:0.07em;text-transform:uppercase;color:var(--mid);line-height:2;">
+            Every cut is intentional.<br>
+            Every silence is placed.<br>
+            Every swell earns its moment.
+          </div>
+        </div>
+      </div>
+      <div class="about-right">
+        <div class="about-bio-block">
+        <!-- <div class="section-label">Who</div>-->
+          <p class="about-bio">
+            <strong style="font-weight: 600; color: var(--accent-2) !important;">Dmytro Mushynskyi.</strong> I work where film, emotion, and sound intersect.
+            Five years shaping what audiences feel — before they understand why.
+          </p>
+          <p class="about-bio">
+            Most editors get the cut right. Few get the feeling right.
+            The difference is in the music — how it's shaped, timed, and built around your story. That's what I do.
+          </p>
+          <!--<div class="about-tags" style="margin-top:1.75rem">
+              <span class="about-tag">Film &amp; TV</span>
+              <span class="about-tag">Advertising</span>
+              <span class="about-tag">Trailers</span>
+              <span class="about-tag">Podcast</span>
+              <span class="about-tag">Brand Audio</span>
+            </div>-->
+        </div>
+      
+        <div class="about-stats">
+          <div class="about-stat-row">
+            <span class="about-stat-num">5+</span>
+            <span class="about-stat-label">Years of<br>craft</span>
+          </div>
+          <div class="about-stat-row">
+            <span class="about-stat-num">80+</span>
+            <span class="about-stat-label">Projects<br>delivered</span>
+          </div>
+          <div class="about-stat-row">
+            <span class="about-stat-num">100%</span>
+            <span class="about-stat-label">Job success<br>Upwork</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+</section>
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-inner">
+    <span class="ticker-item">Music Editing <span class="sep">✦</span></span>
+    <span class="ticker-item">Sound Design <span class="sep">✦</span></span>
+    <span class="ticker-item">Film & TV <span class="sep">✦</span></span>
+    <span class="ticker-item">Advertising <span class="sep">✦</span></span>
+    <span class="ticker-item">Podcast Production <span class="sep">✦</span></span>
+    <span class="ticker-item">Emotional Storytelling <span class="sep">✦</span></span>
+    <span class="ticker-item">Remote Worldwide <span class="sep">✦</span></span>
+    <span class="ticker-item">Upwork Top Rated <span class="sep">✦</span></span>
+    <span class="ticker-item">Music Editing <span class="sep">✦</span></span>
+    <span class="ticker-item">Sound Design <span class="sep">✦</span></span>
+    <span class="ticker-item">Film & TV <span class="sep">✦</span></span>
+    <span class="ticker-item">Advertising <span class="sep">✦</span></span>
+    <span class="ticker-item">Podcast Production <span class="sep">✦</span></span>
+    <span class="ticker-item">Emotional Storytelling <span class="sep">✦</span></span>
+    <span class="ticker-item">Remote Worldwide <span class="sep">✦</span></span>
+    <span class="ticker-item">Upwork Top Rated <span class="sep">✦</span></span>
+  </div>
+</div>
+<!-- PHILOSOPHY -->
+<section class="philosophy">
+  <div class="philosophy-right">
+    <div class="philosophy-right-img" aria-hidden="true"></div>
+  </div>
+  <div class="philosophy-left reveal">
+    <h2 class="philosophy-big about-title">SOUND IS<br> THE LAST 20%<br>THAT DOES 80%<br> OF THE WORK.</h2>
+    <p class="about-creed"
+      style="font-family:var(--mono);font-size:0.75rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--mid);max-width:30rem;line-height:1.8;margin-top:2rem;">
+      Most editors get the cut right. Few get the feeling right.<br>The difference is in how the music is shaped, timed, and
+      built around your story.</p>
+  </div>
+</section>
+<!-- SERVICES -->
+<section class="services reveal section-pad-y" id="services">
+  <div class="container">
+    <div class="track-header">
+      <span class="track-header-num">03</span>
+      <span class="track-header-name">What I Do</span>
+      <span class="track-header-rule"></span>
+      <span class="track-header-meta">CH 01 &middot; MONO</span>
+    </div>
+    <div class="services-header">
+      <div>
+        <h2 class="services-title">SERVICES</h2>
+      </div>
+      <a href="#contact" class="view-all">Get a quote →</a>
+    </div>
+    <div class="services-grid">
+      <div class="service-card">
+        <span class="service-num">01</span>
+        <div class="service-name">MUSIC EDITING<br>FOR FILM & VIDEO</div>
+        <p class="service-desc">Your footage finally feels the way you intended. Cutting music to picture frame-by-frame —
+          shaping emotional arc across scenes, making the audience feel the ending before they understand it.</p>
+        <div class="service-tags">
+          <span>Narrative Film</span>
+          <span>Documentary</span>
+          <span>Trailers</span>
+          <span>Festival</span>
+        </div>
+      </div>
+      <div class="service-card">
+        <span class="service-num">02</span>
+        <div class="service-name">SOUND DESIGN</div>
+        <p class="service-desc">The texture under the story. Original sound layers, atmospheres, and transitions that make
+          your world feel real — or intentionally unreal. Not stock. Not generic. Built for your specific cut.</p>
+        <div class="service-tags">
+          <span>Short Film</span>
+          <span>Brand Content</span>
+          <span>Experimental</span>
+          <span>Games</span>
+        </div>
+      </div>
+      <div class="service-card">
+        <span class="service-num">03</span>
+        <div class="service-name">SOUND MIXING<br>& AUDIO POST</div>
+        <p class="service-desc">Everything in balance. Nothing fighting for space. Final mix for film, web, and broadcast
+          — dialogue sits clean, music breathes, effects land. Delivered stem-by-stem, ready for any platform.</p>
+        <div class="service-tags">
+          <span>Broadcast</span>
+          <span>Streaming</span>
+          <span>Podcast</span>
+          <span>YouTube</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VIDEO REEL — VISUAL STATEMENT: "The Work" -->
+<section class="reel-statement" id="reel">
+  
+    <div class="track-header">
+      <div class="container track-header-container">
+        <span class="track-header-num">04</span>
+        <span class="track-header-name">REEL</span>
+        <span class="track-header-rule"></span>
+        <span class="track-header-meta">CH 01 &middot; MONO</span>
+      </div>
+    </div>
+
+
+  <!-- Grain texture -->
+  <div class="reel-grain" aria-hidden="true"></div>
+  <!-- Video: always fullscreen, gradient mask controls visibility -->
+  <div class="reel-video-zone" aria-hidden="true">
+    <video
+      class="video-reel-bg" id="reel-video"
+      muted loop playsinline preload="none"
+      poster="assets/video/video-poster.webp"
+      webkit-playsinline
+      data-src-desktop="assets/video/video-bg.mp4"
+      data-src-mobile="assets/video/video-bg-mobile.mp4">
+      <!-- src is attached after window.load via inline deferred-video script (see bottom of body).
+           Loader picks the right URL by viewport: ≤900px → 480p (~1.1 MB), >900px → 720p hi-q (~3.3 MB).
+           Keeps the mp4 entirely out of the LCP critical path on every breakpoint. -->
+    </video>
+    <!-- z2: flat dark tint (opacity 1→0.08 on scroll) -->
+    <div class="reel-video-tint" aria-hidden="true"></div>
+    <!-- z3: top/bottom/right feathered edges (opacity 1→0 on scroll) -->
+    <div class="reel-video-edges" aria-hidden="true"></div>
+    <!-- z4: left-side concealer — hides video on text side initially,
+              gradient right boundary, fades to 0 as video reveals on scroll -->
+    <div class="reel-video-reveal" aria-hidden="true"></div>
+
+    <!-- v6 Cinematic overlay (corners + timecode + scan + freq bars) -->
+    <div class="reel-cinematic-overlay" aria-hidden="true">
+      <!-- Corner brackets — square: vertical leg = horizontal leg (15u each) -->
+      <svg class="reel-corner tl" viewBox="0 0 32 32"><path d="M 16 16 L 16 1 L 31 1"  stroke-linecap="square"/></svg>
+      <svg class="reel-corner tr" viewBox="0 0 32 32"><path d="M 16 16 L 16 1 L 1 1"   stroke-linecap="square"/></svg>
+      <svg class="reel-corner br" viewBox="0 0 32 32"><path d="M 16 16 L 16 31 L 1 31" stroke-linecap="square"/></svg>
+      <svg class="reel-corner bl" viewBox="0 0 32 32"><path d="M 16 16 L 16 31 L 31 31" stroke-linecap="square"/></svg>
+
+      <!-- Top-right timecode -->
+      <div class="reel-overlay-tc">
+        <span class="reel-overlay-tc-dot"></span>
+        <span>REC &middot;</span>
+        <span class="reel-overlay-tc-val">00:00:00:00</span>
+      </div>
+
+      <!-- Top-left "FRAME" readout -->
+      <div class="reel-overlay-frame">
+        <span class="reel-overlay-frame-num">FRAME 0001</span>
+        <span class="reel-overlay-frame-meta">24 FPS &middot; 4K</span>
+      </div>
+
+      <!-- Vertical playhead scan line -->
+      <div class="reel-overlay-playhead"></div>
+
+    </div>
+  </div>
+
+  <!-- Graphic layer: structural lines -->
+  <div class="reel-graphic-layer" aria-hidden="true">
+    <div class="rs-hline rs-hline--a"></div>
+    <div class="rs-hline rs-hline--b"></div>
+    <div class="rs-vline"></div>
+  </div>
+
+  <div class="container">
+     <!-- Typography composition -->
+    <div class="reel-composition">
+      <!-- Intro phrase -->
+      <div class="rs-frag rs-frag--intro" aria-label="Sound is not heard">
+        <span class="rs-line">SOUND IS</span>
+        <span class="rs-line">NOT HEARD —</span>
+      </div>
+
+      <!-- Main statement -->
+      <div class="rs-frag rs-frag--main">
+        <span class="rs-word-its">IT'S</span>
+        <span class="rs-word-felt">FELT.</span>
+      </div>
+
+      <div class="rs-wave-label" aria-hidden="true">— 440hz / 20khz —</div>
+
+      <!-- Bottom row: outro phrase + CTA -->
+      <div class="rs-bottom-row">
+
+        <div class="rs-frag rs-frag--outro" aria-label="Edited frame by frame">
+          <span class="rs-line rs-line--sm">EDITED</span>
+          <span class="rs-line rs-line--sm rs-line--indent">FRAME BY FRAME.</span>
+        </div>
+
+        <div class="rs-cta-block">
+          <p class="rs-sub">
+            Every frame has a feeling waiting to be unlocked.<br>I find the exact music, cut it to the bone, and let it do what words can't.
+          </p>
+        </div>
+
+      </div><!-- /rs-bottom-row -->
+
+    </div><!-- /reel-composition -->
+  </div>
+</section>
+
+<!-- PROCESS — Concept A: Frequency Timeline -->
+<section class="process reveal section-pad-y">
+  <div class="container">
+    <div class="track-header">
+      <span class="track-header-num">05</span>
+      <span class="track-header-name">How It Works</span>
+      <span class="track-header-rule"></span>
+      <span class="track-header-meta">CH 01 &middot; MONO</span>
+    </div>
+    <div class="process-header">
+      <div>
+        <h2 class="process-title">HOW <em>EMOTION</em><br>IS BUILT</h2>
+      </div>
+      <p class="process-subtitle">A method. Not a mood.<br>
+      Click any stage to explore what goes into it.
+  </p>
+    </div>
+</div>
+  <!-- Waveform canvas — intensity grows left→right -->
+  <div class="process-wave-wrap">
+    <canvas class="process-wave-canvas" id="process-wave-canvas" aria-hidden="true"></canvas>
+  </div>
+
+  <div class="container">
+  <!-- Timeline nodes -->
+    <!-- a11y: role="list" removed — the timeline contains both .process-node items
+         and .process-inline-detail expansion panels; mixed children broke the
+         list/listitem contract. Nodes remain independently announced; visual
+         layout is unchanged. -->
+    <div class="process-timeline">
+        <div class="process-node" data-step="0" onclick="processExpand(0)" aria-expanded="false">
+        <span class="process-stage-label">Silence</span>
+        <div class="process-dot"></div>
+        <div class="process-node-name">Brief &amp; Discover</div>
+        <p class="process-node-micro">Before any track — we define what the film needs to do emotionally. Scene by scene.
+        </p>
+      </div>
+
+      <!-- Inline detail: after node 0 (mobile 1-col only) -->
+      <div class="process-inline-detail process-inline-detail--solo" id="process-inline-detail-0" aria-live="polite"></div>
+    
+      <div class="process-node" data-step="1" onclick="processExpand(1)" aria-expanded="false">
+        <span class="process-stage-label">Tension</span>
+        <div class="process-dot"></div>
+        <div class="process-node-name">Direction Map</div>
+        <p class="process-node-micro">A curated reference reel. Each track annotated with its emotional function. You approve the feeling before I touch the edit.</p>
+      </div>
+
+      <!-- Inline detail: after node 1 (tablet 2-col row1, or mobile 1-col) -->
+      <div class="process-inline-detail process-inline-detail--row" id="process-inline-detail-row1" aria-live="polite"></div>
+      <div class="process-inline-detail process-inline-detail--solo" id="process-inline-detail-1" aria-live="polite"></div>
+    
+      <div class="process-node" data-step="2" onclick="processExpand(2)" aria-expanded="false">
+        <span class="process-stage-label">Build</span>
+        <div class="process-dot"></div>
+        <div class="process-node-name">Edit &amp; Design</div>
+        <p class="process-node-micro">Music cut to picture. Transitions designed. Arc shaped. This is where the craft happens.</p>
+      </div>
+
+      <!-- Inline detail: after node 2 (mobile 1-col only) -->
+      <div class="process-inline-detail process-inline-detail--solo" id="process-inline-detail-2" aria-live="polite"></div>
+    
+      <div class="process-node" data-step="3" onclick="processExpand(3)" aria-expanded="false">
+        <span class="process-stage-label">Release</span>
+        <div class="process-dot"></div>
+        <div class="process-node-name">Refine &amp; Deliver</div>
+        <p class="process-node-micro">Two to three feedback rounds. Then: stems, full mix, source files. Formatted for your platform. Delivered on time.</p>
+      </div>
+
+      <!-- Inline detail: after node 3 (tablet 2-col row2, or mobile 1-col) -->
+      <div class="process-inline-detail process-inline-detail--row" id="process-inline-detail-row2" aria-live="polite"></div>
+      <div class="process-inline-detail process-inline-detail--solo" id="process-inline-detail-3" aria-live="polite"></div>
+    
+    </div>
+      <!-- Expandable detail panel (desktop only) -->
+    <div class="process-detail" id="process-detail" role="region" aria-live="polite">
+      <div class="process-detail-inner">
+        <div class="process-detail-num" id="process-detail-num">01</div>
+        <div>
+          <div class="process-detail-label" id="process-detail-label"></div>
+          <div class="process-detail-title" id="process-detail-title"></div>
+          <p class="process-detail-body" id="process-detail-body"></p>
+        </div>
+      </div>
+    </div>
+    <!-- Delivery facts row -->
+    <div class="process-delivery" aria-label="Delivery specs">
+      <div class="process-delivery-item">
+        <span class="process-delivery-label">Timeline</span>
+        <div class="process-delivery-num">3–5</div>
+        <span class="process-delivery-note">Days typical turnaround</span>
+      </div>
+      <div class="process-delivery-item">
+        <span class="process-delivery-label">Revisions</span>
+        <div class="process-delivery-num">2–3</div>
+        <span class="process-delivery-note">Rounds before you say yes</span>
+      </div>
+      <div class="process-delivery-item">
+        <span class="process-delivery-label">Delivery</span>
+        <div class="process-delivery-num" style="font-size:1.5rem">Stems</div>
+        <span class="process-delivery-note">Every format needed</span>
+      </div>
+      <div class="process-delivery-item">
+        <span class="process-delivery-label">Platform</span>
+        <div class="process-delivery-num" style="font-size:1.5rem">Any</div>
+        <span class="process-delivery-note">Film, web, broadcast</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PORTFOLIO VIDEO SECTION -->
+<section class="editbay" id="work">
+  <!-- Standard section track header -->
+   <div class="container">
+    <div class="track-header">
+      <span class="track-header-num">06</span>
+      <span class="track-header-name">PORTFOLIO</span>
+      <span class="track-header-rule"></span>
+      <span class="track-header-meta">CH 02 &middot; STEREO</span>
+    </div>
+    <!-- Section title + meta -->
+    <header class="editbay-header">
+      <h2 class="editbay-title">
+        <span class="word"><span>THE</span></span>
+        <span class="word"><span><span class="dot">WORK.</span></span></span>
+      </h2>
+      <div class="editbay-meta">
+
+        <div class="editbay-meta-line">
+          <span>SELECTED PIECES</span>
+        </div>
+        <div class="editbay-meta-line">
+          <span class="editbay-meta-num">2021 &mdash; 2025</span>
+        </div>
+      </div>
+    </header>
+    <!-- Main category tabs -->
+    <div class="editbay-filters" role="tablist">
+      <!-- <span class="editbay-filters-label">Category: </span> -->
+      <button class="editbay-filter is-active" data-filter="music-editing" role="tab">Music Editing</button>
+      <span class="editbay-filter-sep">&#x2502;</span>
+      <button class="editbay-filter" data-filter="sound-design" role="tab">Sound Design</button>
+    </div>
+    <!-- Sub-category tabs (Music Editing only) -->
+    <div class="editbay-subfilters" role="tablist" aria-label="Music editing sub-category">
+      <!--<span class="editbay-filters-label">Series: </span> -->
+      <button class="editbay-subfilter is-active" data-filter-sub="all" role="tab">All</button>
+      <span class="editbay-filter-sep">&#x2502;</span>
+      <button class="editbay-subfilter" data-filter-sub="vertical" role="tab">Vertical Series</button>
+      <span class="editbay-filter-sep">&#x2502;</span>
+      <button class="editbay-subfilter" data-filter-sub="short" role="tab">Short Metres</button>
+    </div>
+    <!-- Stage: video + tracks -->
+    <div class="editbay-stage">
+
+      <!-- Video with cinematic framing -->
+      <div class="editbay-video" data-cursor-zone data-cursor-label="&#x25B6; Play">
+
+        <div class="editbay-readout">
+          <span>NOW PLAYING &middot;</span>
+          <span class="editbay-readout-track">SELECT A TRACK</span>
+        </div>
+
+        <div class="editbay-video-content">
+          <!-- populated by editbay.js — handles local video + YouTube -->
+        </div>
+
+        <!-- Click-to-play overlay (sits below controls but above media) -->
+        <div class="editbay-click-play" aria-hidden="true"></div>
+
+        <!-- Cinematic corner brackets -->
+        <div class="editbay-corners" aria-hidden="true">
+          <svg class="tl" viewBox="0 0 28 28"><path d="M 1 14 L 1 1 L 14 1" stroke-linecap="square"/></svg>
+          <svg class="tr" viewBox="0 0 28 28"><path d="M 1 14 L 1 1 L 14 1" stroke-linecap="square"/></svg>
+          <svg class="br" viewBox="0 0 28 28"><path d="M 1 14 L 1 1 L 14 1" stroke-linecap="square"/></svg>
+          <svg class="bl" viewBox="0 0 28 28"><path d="M 1 14 L 1 1 L 14 1" stroke-linecap="square"/></svg>
+        </div>
+
+        <div class="editbay-thirds" aria-hidden="true"></div>
+
+        <!-- Unified player controls — same UI for local video and YouTube.
+             data-cursor-hide on the whole .epc block: hide the custom "▶ Play" cursor
+             across both the progress bar and the control row, so users get familiar
+             native pointer feedback on all controls. -->
+        <div class="epc" data-cursor-hide>
+          <!-- Progress bar -->
+          <div class="epc-progress">
+            <div class="epc-filled"></div>
+            <div class="epc-handle"></div>
+          </div>
+          <!-- Control row -->
+          <div class="epc-bar">
+            <!-- Play / Pause -->
+            <button class="epc-btn epc-play-btn" aria-label="Play">
+              <svg class="epc-icon-play"  width="16" height="16" viewBox="0 0 11 11" fill="currentColor"><path d="M2 1L10 5.5L2 10V1Z"/></svg>
+              <svg class="epc-icon-pause" width="16" height="16" viewBox="0 0 11 11" fill="currentColor"><rect x="1.5" y="1.5" width="3" height="8"/><rect x="6.5" y="1.5" width="3" height="8"/></svg>
+            </button>
+            <!-- Timecode -->
+            <span class="epc-time">0:00 / 0:00</span>
+            <div class="epc-spacer"></div>
+            <!-- Volume -->
+            <div class="epc-vol-group">
+              <button class="epc-btn epc-vol-btn is-muted" aria-label="Unmute">
+                <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
+                  <path d="M2 5.5H4.5L8 2.5V13.5L4.5 10.5H2V5.5Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
+                  <path class="ev-w1" d="M10.5 5.5C11.5 6.3 12 7.1 12 8C12 8.9 11.5 9.7 10.5 10.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="square"/>
+                  <path class="ev-w2" d="M12.5 3.5C14.2 4.9 15 6.4 15 8C15 9.6 14.2 11.1 12.5 12.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="square"/>
+                  <line class="ev-x1" x1="10" y1="5"  x2="15" y2="11" stroke="currentColor" stroke-width="1.2" stroke-linecap="square"/>
+                  <line class="ev-x2" x1="15" y1="5"  x2="10" y2="11" stroke="currentColor" stroke-width="1.2" stroke-linecap="square"/>
+                </svg>
+              </button>
+              <input class="epc-vol-slider" type="range" min="0" max="1" step="0.02" value="0.7" aria-label="Volume">
+            </div>
+            <!-- Fullscreen — icon swaps to "collapse" in fullscreen state -->
+            <button class="epc-btn epc-fs-btn" aria-label="Fullscreen">
+              <svg class="epc-fs-icon epc-fs-expand" width="16" height="16" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="square">
+                <path d="M1 4V1H4M8 1H11V4M11 8V11H8M4 11H1V8"/>
+              </svg>
+              <svg class="epc-fs-icon epc-fs-collapse" width="16" height="16" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="square">
+                <path d="M4 1V4H1M8 4V1M11 4H8M1 8H4V11M11 8H8V11"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Track list -->
+      <aside class="editbay-tracks">
+        <div class="editbay-tracks-header">
+          <span>Tracks</span>
+          <span class="editbay-tracks-count" id="editbay-track-count">06 / 06</span>
+        </div>
+
+        <article class="editbay-track" data-id="t01" data-cat="music-editing" data-sub="vertical" data-orientation="portrait" data-title="LOVE SCORE — EP. 1.2" data-video="assets/projects/vertical serials/love-score-ep1.mp4">
+          <span class="editbay-track-num">T01</span>
+          <div class="editbay-track-mid">
+            <h3 class="editbay-track-title">Love Score &mdash; Ep. 1.2</h3>
+            <svg class="editbay-track-wave" aria-hidden="true"></svg>
+          </div>
+          <span class="editbay-track-meta">02:14</span>
+        </article>
+
+        <article class="editbay-track" data-id="t02" data-cat="music-editing" data-sub="vertical" data-orientation="portrait" data-title="LOVE SCORE — EP. 1.1" data-video="assets/projects/vertical serials/love-score-ep1-1.mp4">
+          <span class="editbay-track-num">T02</span>
+          <div class="editbay-track-mid">
+            <h3 class="editbay-track-title">Love Score &mdash; Ep. 1.1</h3>
+            <svg class="editbay-track-wave" aria-hidden="true"></svg>
+          </div>
+          <span class="editbay-track-meta">02:08</span>
+        </article>
+
+        <article class="editbay-track" data-id="t03" data-cat="music-editing" data-sub="vertical" data-orientation="portrait" data-title="LOVE SCORE — EP. 70" data-video="assets/projects/vertical serials/love-score-ep70.mp4">
+          <span class="editbay-track-num">T03</span>
+          <div class="editbay-track-mid">
+            <h3 class="editbay-track-title">Love Score &mdash; Ep. 70</h3>
+            <svg class="editbay-track-wave" aria-hidden="true"></svg>
+          </div>
+          <span class="editbay-track-meta">03:20</span>
+        </article>
+
+        <article class="editbay-track" data-id="t04" data-cat="music-editing" data-sub="short" data-title="RICH MAN STEALS FROM BEGGAR" data-video="" data-youtube="0vAr9nHNBvs">
+          <span class="editbay-track-num">T04</span>
+          <div class="editbay-track-mid">
+            <h3 class="editbay-track-title">Rich Man Steals From Beggar</h3>
+            <svg class="editbay-track-wave" aria-hidden="true"></svg>
+          </div>
+          <span class="editbay-track-meta">03:45</span>
+        </article>
+        <article class="editbay-track" data-id="t05" data-cat="music-editing" data-sub="short"
+          data-title="Woman Boss Sends Pics To Male Colleague" data-video="" data-youtube="luWzbINLZw0">
+          <span class="editbay-track-num">T05</span>
+          <div class="editbay-track-mid">
+            <h3 class="editbay-track-title">Woman Boss Sends Pics To Male Colleague</h3>
+            <svg class="editbay-track-wave" aria-hidden="true"></svg>
+          </div>
+          <span class="editbay-track-meta">13:14</span>
+        </article>
+        <article class="editbay-track" data-id="t06" data-cat="music-editing" data-sub="short"
+            data-title="Wife Teaches Lovers A Lesson" data-video="" data-youtube="sIMje9DwIBM">
+            <span class="editbay-track-num">T06</span>
+            <div class="editbay-track-mid">
+              <h3 class="editbay-track-title">Wife Teaches Lovers A Lesson</h3>
+              <svg class="editbay-track-wave" aria-hidden="true"></svg>
+            </div>
+            <span class="editbay-track-meta">12:00</span>
+          </article>
+          <article class="editbay-track" data-id="t07" data-cat="music-editing" data-sub="short"
+            data-title="Blind Man Teaches Girl To See" data-video="" data-youtube="RpaSSfd_rtM">
+            <span class="editbay-track-num">T07</span>
+            <div class="editbay-track-mid">
+              <h3 class="editbay-track-title">Blind Man Teaches Girl To See</h3>
+              <svg class="editbay-track-wave" aria-hidden="true"></svg>
+            </div>
+            <span class="editbay-track-meta">09:12</span>
+          </article>
+          <article class="editbay-track" data-id="t08" data-cat="music-editing" data-sub="short"
+            data-title="Homeless girl won rich man's heart" data-video="" data-youtube="4izX98svp2c">
+            <span class="editbay-track-num">T08</span>
+            <div class="editbay-track-mid">
+              <h3 class="editbay-track-title">Homeless girl won rich man's heart</h3>
+              <svg class="editbay-track-wave" aria-hidden="true"></svg>
+            </div>
+            <span class="editbay-track-meta">10:55</span>
+          </article>
+            <article class="editbay-track" data-id="t09" data-cat="music-editing" data-sub="short"
+            data-title="I Dumped My BF Over Money" data-video="" data-youtube="MOKw0XeYZK8">
+            <span class="editbay-track-num">T09</span>
+            <div class="editbay-track-mid">
+              <h3 class="editbay-track-title">I Dumped My BF Over Money</h3>
+              <svg class="editbay-track-wave" aria-hidden="true"></svg>
+            </div>
+            <span class="editbay-track-meta">11:20</span>
+          </article>
+    <article class="editbay-track" data-id="t10" data-cat="sound-design" data-sub="" data-title="Bubles sounfx"
+      data-video="assets/projects/BUBLES_SOUNDFX.mp4">
+      <span class="editbay-track-num">T10</span>
+      <div class="editbay-track-mid">
+        <h3 class="editbay-track-title">Bubles sounfx</h3>
+        <svg class="editbay-track-wave" aria-hidden="true"></svg>
+      </div>
+      <span class="editbay-track-meta">00:16</span>
+    </article>
+        <article class="editbay-track" data-id="t11" data-cat="sound-design" data-sub="" data-title="FORMATIX" data-video="assets/projects/Formatix.mp4">
+          <span class="editbay-track-num">T11</span>
+          <div class="editbay-track-mid">
+            <h3 class="editbay-track-title">Formatix</h3>
+            <svg class="editbay-track-wave" aria-hidden="true"></svg>
+          </div>
+          <span class="editbay-track-meta">01:20</span>
+        </article>
+        <article class="editbay-track" data-id="t12" data-cat="sound-design" data-sub="" data-title="Fallout4" data-video="assets/projects/Fallout4_ReSoundDesighnAmbience+Fx.mp4">
+          <span class="editbay-track-num">T12</span>
+          <div class="editbay-track-mid">
+            <h3 class="editbay-track-title">Fallout4</h3>
+            <svg class="editbay-track-wave" aria-hidden="true"></svg>
+          </div>
+          <span class="editbay-track-meta">01:30</span>
+        </article>
+
+        <article class="editbay-track" data-id="t13" data-cat="sound-design" data-sub="" data-title="NEW YEAR'S ZUBBY" data-video="" data-youtube="rwmw5Zc2i-c">
+          <span class="editbay-track-num">T13</span>
+          <div class="editbay-track-mid">
+            <h3 class="editbay-track-title">New Year's Zubby</h3>
+            <svg class="editbay-track-wave" aria-hidden="true"></svg>
+          </div>
+          <span class="editbay-track-meta">00:45</span>
+        </article>
+
+        <!-- Revealed by JS when tracks are collapsed -->
+        <button class="editbay-more-btn" id="editbay-more-btn" style="display:none" aria-label="Show more tracks">
+          More Videos <span class="editbay-more-count" id="editbay-more-count"></span>
+        </button>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- SELECTED WORK -->
+<section class="projects reveal section-pad-y" id="work-links">
+  <div class="container">
+  <div class="projects-header">
+    <div>
+      <h2 class="projects-title"><span class="accent">TV</span> SERIES<br>AND SHOWS.</h2>
+    </div>
+   <!-- <a class="view-all" href="#audio">Listen ↓</a>-->
+  </div>
+
+  <div class="projects-list">
+    <a href="https://youtu.be/QuA7BJGZMKs?si=o7AUfg0wSiN0aWHl" target="_blank" rel="noopener noreferrer" class="project-row">
+      <span class="project-index">01</span>
+      <span class="project-title">Christmas. You Are Not Alone</span>
+      <span class="project-category">Holiday Musical Film — 2023</span>
+      <span class="project-role">Music Editing & Sound Design</span>
+      <span class="project-arrow">↗</span>
+    </a>
+    <a href="https://youtu.be/1DndReEECDo?si=9R0VqLk9uIsoltNy" target="_blank" rel="noopener noreferrer" class="project-row">
+      <span class="project-index">02</span>
+      <span class="project-title">They Paid for Others’ Sins</span>
+      <span class="project-category">Crime Drama Series — 2026</span>
+      <span class="project-role">Sound Design & Music Editing</span>
+      <span class="project-arrow">↗</span>
+    </a>
+    <a href="https://www.youtube.com/playlist?list=PLcpkKchW7Xe5LCZ_dsmyCZntCbY5eBnUA" target="_blank" rel="noopener noreferrer" class="project-row">
+      <span class="project-index">03</span>
+      <span class="project-title">The Voice Ukraine</span>
+      <span class="project-category">Talent Show</span>
+      <span class="project-role">Music Editing</span>
+      <span class="project-arrow">↗</span>
+    </a>
+    <a href="https://www.youtube.com/playlist?list=PLCOKdfjJBMNrTjqL4y-rRPw3d32DgpXID" target="_blank" rel="noopener noreferrer" class="project-row">
+      <span class="project-index">04</span>
+      <span class="project-title">Masquerade Show</span>
+      <span class="project-category">Entertainment Show</span>
+      <span class="project-role">Music Editing & Sound Design</span>
+      <span class="project-arrow">↗</span>
+    </a>
+  <a href="https://youtu.be/LKWV1eAXaFg?si=Os-Ub4Dt14aAHJ0o" target="_blank" rel="noopener noreferrer" class="project-row">
+    <span class="project-index">05</span>
+    <span class="project-title">Lip Sync Battle</span>
+    <span class="project-category">Entertainment Show</span>
+    <span class="project-role">Music Editing</span>
+    <span class="project-arrow">↗</span>
+  </a>
+  <a href="https://youtu.be/IFa8HN0eEIc?si=tR7F_ZxYzVra7Q9S" target="_blank" rel="noopener noreferrer" class="project-row">
+    <span class="project-index">06</span>
+    <span class="project-title">The Meme Battle</span>
+    <span class="project-category">Documentary</span>
+    <span class="project-role">Music Editing</span>
+    <span class="project-arrow">↗</span>
+  </a>
+  <a href="https://youtu.be/1DndReEECDo?si=_k9CNClZv1Wisxrj" target="_blank" rel="noopener noreferrer" class="project-row">
+      <span class="project-index">07</span>
+      <span class="project-title">They Paid for Others’ Sins</span>
+      <span class="project-category">TV Crime Series</span>
+      <span class="project-role">Music Editing</span>
+      <span class="project-arrow">↗</span>
+    </a>
+  </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS — Concept A: Cinematic Pull Quotes with Slider -->
+<section class="testimonials reveal section-pad-y">
+  <div class="container">
+  <div class="track-header">
+    <span class="track-header-num">07</span>
+    <span class="track-header-name">TESTIMONIALS</span>
+    <span class="track-header-rule"></span>
+    <span class="track-header-meta">CH 01 &middot; MONO</span>
+  </div>
+  <div class="testimonials-header">
+    <div>
+      <h2 class="testimonials-title">REAL WORDS.<br><em>REAL RESULTS.</em></h2>
+    </div>
+    <div class="testimonials-nav">
+      <span class="testi-counter" id="testi-counter" aria-live="polite">01 / 04</span>
+      <div class="testimonials-buttons">
+      <button class="testi-arrow" id="testi-prev" aria-label="Previous testimonial">
+        <svg viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg">
+          <polyline points="9,2 4,7 9,12"/>
+        </svg>
+      </button>
+      <button class="testi-arrow" id="testi-next" aria-label="Next testimonial">
+        <svg viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg">
+          <polyline points="5,2 10,7 5,12"/>
+        </svg>
+      </button>
+      </div>
+    </div>
+  </div>
+
+<!-- Slider -->
+<div class="testi-slider-wrap" id="testi-slider-wrap">
+  <div class="testi-track" id="testi-track">
+<!-- Slide 1 -->
+<div class="testi-slide is-active" role="group" aria-roledescription="slide" aria-label="Testimonial 1 of 4">
+  <p class="testi-pull-quote">
+    We had a rough cut that didn’t really land emotionally. He reworked the music edit and suddenly the whole ending
+    started to feel right. Nothing overdone — just <span class="highlight">precise decisions</span>.
+  </p>
+  <div class="testi-meta">
+    <div class="testi-author-row">
+      <div class="testi-avatar" aria-hidden="true">
+        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="16" cy="12" r="5.5" stroke="currentColor" stroke-width="1.5" />
+          <path d="M4 28c0-6.627 5.373-12 12-12s12 5.373 12 12" stroke="currentColor" stroke-width="1.5"
+            stroke-linecap="square" />
+        </svg>
+      </div>
+      <div>
+        <div class="testi-author-name">Oksana M. — Director, Kyiv</div>
+        <div class="testi-author-role">Short Film</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 2 -->
+<div class="testi-slide" role="group" aria-roledescription="slide" aria-label="Testimonial 2 of 4">
+  <p class="testi-pull-quote">
+    What I liked most — he doesn’t just <span class="highlight">“add music”</span>. He listens to what the scene is
+    trying to say and builds around it. Saves a lot of back-and-forth.
+  </p>
+  <div class="testi-meta">
+    <div class="testi-author-row">
+      <div class="testi-avatar" aria-hidden="true">
+        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="16" cy="12" r="5.5" stroke="currentColor" stroke-width="1.5" />
+          <path d="M4 28c0-6.627 5.373-12 12-12s12 5.373 12 12" stroke="currentColor" stroke-width="1.5"
+            stroke-linecap="square" />
+        </svg>
+      </div>
+      <div>
+        <div class="testi-author-name">Andrii K. — Creative Producer, Lviv</div>
+        <div class="testi-author-role">Commercial Video</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 3 -->
+<div class="testi-slide" role="group" aria-roledescription="slide" aria-label="Testimonial 3 of 4">
+  <p class="testi-pull-quote">
+    Clear communication, fast turnaround, and a few strong options to choose from. Everything delivered on time — <span
+      class="highlight">no need to chase</span>.
+  </p>
+  <div class="testi-meta">
+    <div class="testi-author-row">
+      <div class="testi-avatar" aria-hidden="true">
+        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="16" cy="12" r="5.5" stroke="currentColor" stroke-width="1.5" />
+          <path d="M4 28c0-6.627 5.373-12 12-12s12 5.373 12 12" stroke="currentColor" stroke-width="1.5"
+            stroke-linecap="square" />
+        </svg>
+      </div>
+      <div>
+        <div class="testi-author-name">Marta S. — Producer, Warsaw</div>
+        <div class="testi-author-role">Branded Content</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 4 -->
+<div class="testi-slide" role="group" aria-roledescription="slide" aria-label="Testimonial 4 of 4">
+  <p class="testi-pull-quote">
+    Initially hired for a single video, but ended up asking him to adjust sound across the whole project. He brought
+    <span class="highlight">consistency we were missing</span>.
+  </p>
+  <div class="testi-meta">
+    <div class="testi-author-row">
+      <div class="testi-avatar" aria-hidden="true">
+        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="16" cy="12" r="5.5" stroke="currentColor" stroke-width="1.5" />
+          <path d="M4 28c0-6.627 5.373-12 12-12s12 5.373 12 12" stroke="currentColor" stroke-width="1.5"
+            stroke-linecap="square" />
+        </svg>
+      </div>
+      <div>
+        <div class="testi-author-name">Dmytro V. — Marketing Lead, Kyiv</div>
+        <div class="testi-author-role">Digital Campaign</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  </div><!-- /testi-track -->
+</div><!-- /testi-slider-wrap -->
+  <!-- Progress dots -->
+  <div class="testi-dots" role="tablist" aria-label="Testimonial navigation">
+    <button class="testi-dot active" role="tab" aria-selected="true"  aria-label="Go to testimonial 1" onclick="testiGoTo(0)"></button>
+    <button class="testi-dot"        role="tab" aria-selected="false" aria-label="Go to testimonial 2" onclick="testiGoTo(1)"></button>
+    <button class="testi-dot"        role="tab" aria-selected="false" aria-label="Go to testimonial 3" onclick="testiGoTo(2)"></button>
+    <button class="testi-dot"        role="tab" aria-selected="false" aria-label="Go to testimonial 4" onclick="testiGoTo(3)"></button>
+  </div>
+</div>
+
+</section>
+
+<!-- CTA -->
+<section class="cta-block reveal" >
+  <!-- <div class="container">
+    <div class="track-header">
+      <span class="track-header-num">08</span>
+      <span class="track-header-name">CONTACT</span>
+      <span class="track-header-rule"></span>
+      <span class="track-header-meta">CH 01 &middot; MONO</span>
+    </div>
+  </div>-->
+<div class="cta-body">
+    <div class="cta-left">
+     <!-- <div class="section-label" style="color:rgba(245,242,237,0.6);">Ready?</div>-->
+      <h2 class="cta-big"><span style="color:var(--bg)">LET'S MAKE</span><br>THEM FEEL IT.</h2>
+      <p style="font-size: 1rem;font-weight:300;max-width: 22.5rem;line-height: 1.7;margin-top: 2rem;">Available for film, advertising, documentary, podcast, and brand audio projects. Response within 24 hours.</p>
+
+      <!-- Platform links -->
+      <div class="cta-contact-links cta-platform-links">
+        <a href="https://www.upwork.com/freelancers/~01e0bd2dfc67aaf55a" class="contact-link-row" target="_blank" rel="noopener noreferrer">
+          <span class="contact-link-label">Hire on Upwork</span>
+          <span class="contact-link-type">Freelance Platform ↗</span>
+        </a>
+        <a href="https://www.linkedin.com/in/дмитро-мушинський-a9a504230/" class="contact-link-row" target="_blank" rel="noopener noreferrer">
+          <span class="contact-link-label">LinkedIn</span>
+          <span class="contact-link-type">Connect ↗</span>
+        </a>
+      </div>
+    </div>
+    <div class="cta-right" id="contact">
+      <div>
+        <!--<div class="section-label">Contact</div>-->
+        <h3 class="cta-contact-title">GET IN TOUCH</h3>
+      </div>
+
+      <!-- Contact form -->
+      <form class="contact-form" id="contact-form" action="https://formspree.io/f/xeevkdpg" method="POST" novalidate>
+        <div class="contact-form-field">
+          <label class="contact-form-label" for="cf-name">Your Name</label>
+          <input class="contact-form-input" id="cf-name" name="name" type="text" placeholder="John Doe" autocomplete="name" required>
+        </div>
+        <div class="contact-form-field">
+          <label class="contact-form-label" for="cf-email">Email</label>
+          <input class="contact-form-input" id="cf-email" name="email" type="email" placeholder="john@studio.com" autocomplete="email" required>
+        </div>
+        <div class="contact-form-field">
+          <label class="contact-form-label" for="cf-msg">Message</label>
+          <textarea class="contact-form-input contact-form-textarea" id="cf-msg" name="message" placeholder="Tell me about your project..." rows="4" required></textarea>
+        </div>
+        <button class="contact-form-submit" id="contact-form-submit" type="submit">
+          <span class="contact-form-submit-text">Send Message</span>
+          <svg class="contact-form-submit-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M2 7h10M7 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"/>
+          </svg>
+          <svg class="contact-form-submit-check" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="display:none">
+            <path d="M2.5 8.5l3.5 3.5 7-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"/>
+          </svg>
+        </button>
+        <p class="contact-form-success" id="contact-form-success" aria-live="polite"></p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <!-- a11y: inline override to raise WCAG contrast on the © line to ≥ 4.5:1 on #0A0A0A
+       (was rgba(239,234,224,.35) ≈ 2.8:1 → now ≈ 6.8:1). CSS module structure left untouched. -->
+  <span class="f-copy" style="color: rgba(239, 234, 224, 0.78);">© 2026 Dmytro Mushynskyi — DM Studio</span>
+  <div class="f-links">
+    <a href="#about">About me</a>
+    <a href="#services">Services</a>
+    <a href="#work">Work</a>
+    <a href="https://www.upwork.com/freelancers/~01e0bd2dfc67aaf55a" target="_blank">Upwork</a>
+  </div>
+</footer>
+
+<!-- v8: Smooth scroll layer — Lenis MUST load before GSAP triggers
+     so smooth-scroll.js can wire them together on initial paint. -->
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+<script src="js/smooth-scroll.js" defer></script>
+<script src="./js/hero-parallax.js" defer></script>
+<script src="js/sections.js" defer></script>
+<script src="js/sound.js" defer></script>
+<!-- Minified bundles (dist/): identical behavior, smaller parse/transfer cost on mobile -->
+<script src="dist/reel.min.js" defer></script>
+<script src="js/ui.js" defer></script>
+<script src="js/contact.js" defer></script>
+
+<!-- v5 Redesign JS -->
+<script src="./js/session-ui.js" defer></script>
+<script src="./dist/editbay.min.js" defer></script>
+<script src="./js/reel-overlay.js" defer></script>
+<script src="./dist/motion-system.min.js" defer></script>
+
+<!-- WOW: hero visual layer (cursor, trail, oscilloscope, parallax, glitch, magnetic) -->
+<script src="./dist/wow-effects.min.js?v=2" defer></script>
+
+<!-- Deferred reel-video loader — viewport-aware. After window.load, picks the right
+     mp4 (mobile 480p / desktop 720p hi-q), injects it via <source>, calls video.load(),
+     and lets the existing IntersectionObserver in reel.js trigger playback on view.
+     The audio track is preserved — soundManager toggles mute on the element directly. -->
+<script>
+(function () {
+  function activateReelVideo() {
+    var v = document.getElementById('reel-video');
+    if (!v) return;
+    if (v.dataset.activated) return;          // idempotent — no double-load
+    var isDesktop = window.matchMedia('(min-width: 901px)').matches;
+    var url = isDesktop ? v.dataset.srcDesktop : v.dataset.srcMobile;
+    if (!url) return;
+    var s = document.createElement('source');
+    s.src = url;
+    s.type = 'video/mp4';
+    v.appendChild(s);
+    v.setAttribute('preload', 'metadata');    // let browser prep first frame
+    v.dataset.activated = '1';
+    try { v.load(); } catch (e) {}
+  }
+  if (document.readyState === 'complete') {
+    requestAnimationFrame(activateReelVideo);
+  } else {
+    window.addEventListener('load', function () {
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(activateReelVideo, { timeout: 1200 });
+      } else {
+        setTimeout(activateReelVideo, 600);
+      }
+    }, { once: true });
+  }
+})();
+</script>
+</body>
+</html>

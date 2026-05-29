@@ -1,0 +1,310 @@
+/* ============================================================
+   process.css — Frequency Timeline (interactive steps)
+   Mobile-first. Single column → 2-col @601 → 4-col @901.
+   padding from layout.css
+   ============================================================ */
+
+.process-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-top: clamp(2rem, 5vh, 3.5rem);
+  margin-bottom: 3rem;
+  gap: 2rem;
+}
+
+.process-title { margin-top: 1rem; color: var(--ink); }
+.process-title em { font-style: normal; color: var(--accent); }
+
+.process-subtitle {
+  font-size: 0.875rem;
+  font-weight: 300;
+  line-height: 1.7;
+  color: var(--ink-2);
+  max-width: 100%;
+  width: 100%;
+  text-align: left;
+  margin-bottom: 0.2rem;
+}
+
+/* ── Waveform canvas — hidden in v9 ── */
+.process-wave-wrap   { display: none; }
+.process-wave-canvas { display: none; }
+
+/* ── Timeline — mobile-first single column ── */
+.process-timeline {
+  display: grid;
+  grid-template-columns: 1fr;
+  position: relative;
+  border: 1px solid var(--rule);
+  border-top: 1px solid var(--rule);
+}
+.process-timeline::before { display: none; }
+
+.process-node {
+  position: relative; z-index: 1;
+  display: flex; flex-direction: column; align-items: center;
+  padding: 2rem 1.5rem 3rem;
+  border-bottom: 1px solid var(--rule);
+  cursor: pointer;
+  background: var(--bg-2);
+  color: var(--ink);
+  transition: background 0.3s, transform 0.3s, box-shadow 0.3s, color 0.3s;
+  overflow: hidden;
+}
+.process-node:last-child { border-bottom: none; }
+.process-node:hover { background: var(--bg-3); }
+
+/* Active: Option A — Elevated Dark */
+.process-node.active {
+  background: var(--bg-3);
+  color: var(--ink);
+  transform: translateY(-2px);
+  z-index: 2;
+  box-shadow:
+    inset 0 3px 0 var(--accent),
+    0 6px 24px rgba(0,0,0,0.5),
+    0 0 0 1px rgba(255,59,0,0.14);
+}
+
+/* Hover tap hint */
+.process-node::after {
+  content: 'TAP';
+  font-family: var(--font-mono); font-size: 0.4375rem;
+  letter-spacing: 0.18em; color: var(--accent);
+  position: absolute; bottom: 1rem; left: 50%;
+  transform: translateX(-50%);
+  opacity: 0; transition: opacity 0.3s;
+}
+.process-node:hover::after { opacity: 1; }
+.process-node.active::after { display: none; }
+
+.process-stage-label {
+  font-family: var(--font-mono); font-size: 0.5rem;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--accent-2);
+  margin-top: 0.75rem; order: 10;
+  transition: color 0.3s, opacity 0.3s;
+}
+.process-node.active .process-stage-label { color: var(--accent); opacity: 1; }
+
+.process-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--rule); border: 1.5px solid var(--rule);
+  margin-bottom: 1.5rem; margin-top: 1rem;
+  transition: all 0.3s; flex-shrink: 0;
+}
+.process-node:hover .process-dot {
+  background: var(--accent); border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(255,59,0,0.15);
+}
+.process-node.active .process-dot {
+  background: var(--accent); border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(255,59,0,0.2);
+}
+
+.process-node-name {
+  font-family: var(--font-mono); font-size: 0.6875rem;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--ink); text-align: center;
+  margin-bottom: 1rem;
+  transition: color 0.3s, font-weight 0.3s;
+}
+.process-node.active .process-node-name { color: var(--ink); font-weight: 700; letter-spacing: 0.08em; }
+
+.process-node-micro {
+  font-size: 0.8125rem; font-weight: 300; line-height: 1.6;
+  color: var(--ink-2); text-align: center; max-width: 24ch;
+  transition: color 0.3s;
+}
+.process-node.active .process-node-micro { color: var(--ink-2); }
+
+/* ── Expandable detail panel — hidden on mobile, shown ≥901 ── */
+.process-detail {
+  display: none;
+  border: 1px solid var(--rule);
+  border-top: none;
+  background: var(--bg);
+  color: var(--ink);
+  padding: 2.5rem var(--pad-page);
+  position: relative;
+}
+.process-detail::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0;
+  height: 2px; background: var(--accent);
+}
+
+.process-detail-inner {
+  display: grid; grid-template-columns: 1fr 2fr;
+  gap: 3rem; align-items: start;
+}
+.process-detail-num {
+  font-family: var(--font-display); font-size: 5rem;
+  font-weight: 800; line-height: 1; color: var(--accent);
+}
+.process-detail-label {
+  font-family: var(--font-mono); font-size: 0.5625rem;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--ink-3); margin-bottom: 0.75rem;
+}
+.process-detail-title {
+  font-family: var(--font-display); font-size: 2.25rem;
+  font-weight: 800; line-height: 1; text-transform: uppercase;
+  margin-bottom: 1.25rem; color: var(--ink);
+}
+.process-detail-body {
+  font-size: 0.9375rem; font-weight: 300; line-height: 1.8;
+  color: var(--ink-2); max-width: 54ch;
+}
+
+/* ── Delivery row — single column on mobile ── */
+.process-delivery {
+  display: grid; grid-template-columns: 1fr;
+  gap: 0; border: 1px solid var(--rule); border-top: none;
+}
+.process-delivery-item {
+  padding: 2rem;
+  border-bottom: 1px solid var(--rule);
+}
+.process-delivery-item:last-child { border-bottom: none; }
+
+.process-delivery-num {
+  font-family: var(--font-display); font-size: 2rem;
+  font-weight: 800; line-height: 1; margin-bottom: 0.25rem; color: var(--ink);
+}
+.process-delivery-label {
+  font-family: var(--font-mono); font-size: 0.5625rem;
+  letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-2);
+  display: block; margin-bottom: 0.2rem;
+}
+.process-delivery-note {
+  font-size: 0.75rem; font-weight: 300; color: var(--ink-2); line-height: 1.5;
+}
+
+/* ── Inline detail — solo variant default on mobile ── */
+.process-inline-detail {
+  display: none;
+  grid-column: 1 / -1;
+  background: var(--bg);
+  color: var(--ink);
+  padding: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(.4,0,.2,1), padding 0.3s;
+  position: relative;
+}
+.process-inline-detail.visible { max-height: 500px; padding: 2rem 1.5rem; }
+.process-inline-detail::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0;
+  height: 2px; background: var(--accent);
+}
+.process-inline-detail-inner {
+  display: grid; grid-template-columns: auto 1fr;
+  gap: 1.5rem; align-items: start;
+}
+.process-inline-detail-num {
+  font-family: var(--font-display); font-size: 3.5rem;
+  font-weight: 800; line-height: 1; color: var(--accent);
+}
+.process-inline-detail-label {
+  font-family: var(--font-mono); font-size: 0.5rem;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--ink-3); margin-bottom: 0.5rem;
+}
+.process-inline-detail-title {
+  font-family: var(--font-display); font-size: 1.5rem;
+  font-weight: 800; line-height: 1; text-transform: uppercase;
+  margin-bottom: 0.75rem; color: var(--ink);
+}
+.process-inline-detail-body {
+  font-size: 0.875rem; font-weight: 300; line-height: 1.8; color: var(--ink-2);
+}
+
+/* Mobile single-column view shows the "solo" inline-detail variant only. */
+.process-inline-detail--solo { display: block; }
+.process-inline-detail--row  { display: none; }
+
+/* Curtain scroll-over effect — desktop only */
+section.process { position: relative; z-index: 10; will-change: clip-path; }
+
+/* ── ≥ 541px — wider phones get the original header row ── */
+@media (min-width: 541px) {
+  .process-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .process-subtitle {
+    max-width: 38ch;
+    width: auto;
+    text-align: right;
+    align-self: flex-end;
+  }
+}
+
+/* ── ≥ 601px — tablet: 2-col timeline, 2-col delivery, inline-row variant ── */
+@media (min-width: 601px) {
+  .process-timeline { grid-template-columns: 1fr 1fr; }
+  .process-node { border-right: 1px solid var(--rule); border-bottom: none; }
+  .process-node:nth-child(2n) { border-right: none; }
+  .process-node:nth-child(3),
+  .process-node:nth-child(4) { border-top: 1px solid var(--rule); }
+  .process-node:last-child { border-right: none; }
+
+  .process-delivery { grid-template-columns: 1fr 1fr; }
+  .process-delivery-item { border-right: 1px solid var(--rule); border-bottom: 0; }
+  .process-delivery-item:nth-child(2n) { border-right: none; }
+  .process-delivery-item:nth-child(3),
+  .process-delivery-item:nth-child(4) { border-top: 1px solid var(--rule); }
+  .process-delivery-item:last-child { border-right: none; }
+
+  .process-inline-detail--row  { display: block; }
+  .process-inline-detail--solo { display: none; }
+}
+
+/* ── ≥ 769px — curtain scroll-over effect ── */
+@media (min-width: 769px) {
+  .process--curtain {
+    position: relative;
+    z-index: 5;
+    margin-top: -40svh;
+    background: var(--bg);
+    isolation: isolate;
+  }
+}
+
+/* ── ≥ 901px — desktop: 4-col timeline + delivery, process-detail panel ── */
+@media (min-width: 901px) {
+  .process-timeline {
+    grid-template-columns: repeat(4, 1fr);
+    border-top: none;
+  }
+  .process-timeline::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 38px; left: 0; right: 0;
+    height: 1px;
+    background: var(--rule);
+    z-index: 0;
+  }
+  /* :nth-child(n) here is not redundant — it carries the same specificity
+     as the @601 tablet rule `.process-node:nth-child(2n){border-right:none}`
+     and, being later in source order, wins the cascade. Without this, the
+     tablet rule keeps hiding border-right on EVEN DOM children, which on
+     desktop maps to Edit & Design (nth-child 6) — there are hidden
+     .process-inline-detail siblings between nodes, so :nth-child math
+     doesn't line up with visible-column index. Same story for delivery. */
+  .process-node { border-right: 1px solid var(--rule); border-top: none; }
+  .process-node:nth-child(n) { border-top: none; border-right: 1px solid var(--rule); }
+  .process-node:last-child { border-right: none; }
+
+  .process-delivery { grid-template-columns: repeat(4, 1fr); }
+  .process-delivery-item { border-right: 1px solid var(--rule); border-top: none; }
+  .process-delivery-item:nth-child(n) { border-top: none; border-right: 1px solid var(--rule); }
+  .process-delivery-item:last-child { border-right: none; }
+
+  .process-detail.visible { display: block; }
+  .process-inline-detail--row,
+  .process-inline-detail--solo { display: none; }
+}

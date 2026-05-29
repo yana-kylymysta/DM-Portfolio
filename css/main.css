@@ -1,0 +1,11 @@
+/* DM Studio — DEPRECATED entry point.
+   Previously this file used @import to chain 18 stylesheets, which is
+   render-blocking (sequential round-trips) and noticeably hurts LCP.
+
+   v9 refactor: each stylesheet is now linked individually from index.html
+   so the browser can fetch them in parallel via HTTP/2 multiplexing.
+
+   Do NOT add @import statements here. If you need to add a new stylesheet,
+   add a <link rel="stylesheet"> in index.html in the correct cascade order.
+
+   This file is intentionally empty — kept only as a breadcrumb. Safe to delete. */

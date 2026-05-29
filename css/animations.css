@@ -1,0 +1,149 @@
+/* ============================================================
+   animations.css — Unified motion system (entry/scroll reveals)
+   ============================================================
+   ANTI-FOUC ARCHITECTURE:
+   1. <head> inline script adds .motion-loading to <html> BEFORE
+      first paint (unless prefers-reduced-motion).
+   2. CSS pre-hides every motion target via html.motion-loading
+      selector — synchronous with CSS parse, no defer-script lag,
+      so iOS Safari / Chrome never paint the unanimated frame first.
+   3. motion-system.js boots, runs gsap.set() to place GSAP's own
+      inline start-states on every target, then removes
+      .motion-loading. CSS pre-hide stops applying; inline GSAP
+      styles continue to hold elements until ScrollTrigger fires.
+   4. JS disabled / GSAP missing: class is left on <html> by no-one,
+      OR motion-system.js removes it on its bail-out paths → all
+      content stays visible.
+   5. prefers-reduced-motion: inline script never adds the class →
+      no pre-hide ever applies → all content visible from frame 1.
+
+   Keep selectors below in sync with motion-system.js targets.
+   ============================================================ */
+
+/* ── Runtime classes added by motion-system.js. No html.motion-loading
+      prefix needed: these classes only exist after JS has booted, so
+      they cannot cause FOUC. ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+}
+.fx-reveal {
+  opacity: 0;
+  clip-path: inset(0 0 100% 0);
+  -webkit-clip-path: inset(0 0 100% 0);
+  transform: translateY(8px);
+}
+.fx-fade {
+  opacity: 0;
+  transform: translateY(16px);
+}
+.fx-slide {
+  opacity: 0;
+  transform: translateX(-12px);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   PRE-HIDDEN STATES — active ONLY while <html class="motion-loading">
+   ════════════════════════════════════════════════════════════════ */
+
+/* REVEAL — headline clip-path sweep */
+html.motion-loading .about-headline,
+html.motion-loading .philosophy-big,
+html.motion-loading .services-title,
+html.motion-loading .process-title,
+html.motion-loading .testimonials-title,
+html.motion-loading .projects-title,
+html.motion-loading .cta-big {
+  opacity: 0;
+  clip-path: inset(0 0 100% 0);
+  -webkit-clip-path: inset(0 0 100% 0);
+  transform: translateY(8px);
+}
+
+/* FADE-IN — body text, blocks */
+html.motion-loading .about-creed,
+html.motion-loading .philosophy-body,
+html.motion-loading .philosophy-quote,
+html.motion-loading .testi-slider-wrap,
+html.motion-loading .cta-contact-title,
+html.motion-loading .contact-form,
+html.motion-loading .contact-form-submit,
+html.motion-loading .about-bio {
+  opacity: 0;
+}
+
+/* SLIDE-IN — labels, meta, track-headers */
+html.motion-loading .section-label,
+html.motion-loading .editbay-meta,
+html.motion-loading .process-subtitle,
+html.motion-loading .testi-counter,
+html.motion-loading .testimonials-buttons,
+html.motion-loading .track-header {
+  opacity: 0;
+  transform: translateX(-12px);
+}
+
+/* STAGGER groups — short rows + long vertical lists */
+html.motion-loading .contact-link-row,
+html.motion-loading .contact-form-field,
+html.motion-loading .editbay-filter,
+html.motion-loading .editbay-filters-label,
+html.motion-loading .testi-dot,
+html.motion-loading .service-card,
+html.motion-loading .process-node,
+html.motion-loading .about-stat-row,
+html.motion-loading .project-row,
+html.motion-loading .editbay-track {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+/* TESTIMONIAL — pull-quote + author row on initial active slide.
+   Applies ONLY during initial load. Subsequent slide changes use
+   JS-driven gsap.fromTo (sections.js goTo), so no CSS dependency. */
+html.motion-loading .testi-slide.is-active .testi-pull-quote,
+html.motion-loading .testi-slide.is-active .testi-author-row {
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+/* EDITBAY — video frame fade. (Title reveal is now CSS+IO, owned by
+   editbay.css — see is-title-revealed pattern.) */
+html.motion-loading .editbay-video {
+  opacity: 0;
+  transform: scale(0.96);
+}
+
+/* ── will-change hints — promote every observed reveal target to its
+      own compositor layer BEFORE the IO/ScrollTrigger fires. On iOS
+      Safari this prevents the address-bar resize from triggering a
+      layout pass that re-fires IntersectionObserver on already-animated
+      elements (the root cause of the mobile flicker bug). Once an
+      element finishes animating, .has-animated releases the layer so
+      we don't keep paying the memory cost. ── */
+.reveal, .fx-reveal, .fx-fade, .fx-slide,
+.about-headline, .philosophy-big, .services-title,
+.process-title, .testimonials-title, .projects-title, .cta-big,
+.about-creed, .philosophy-body, .philosophy-quote,
+.testi-slider-wrap, .cta-contact-title, .contact-form,
+.contact-form-submit, .about-bio,
+.section-label, .editbay-meta, .process-subtitle,
+.testi-counter, .testimonials-buttons, .track-header,
+.contact-link-row, .contact-form-field, .editbay-filter,
+.editbay-filters-label, .testi-dot, .service-card,
+.process-node, .about-stat-row, .project-row, .editbay-track,
+.editbay-video {
+  will-change: opacity, transform;
+}
+
+/* Release the compositor layer once the reveal is done — keeps memory
+   sane on long pages. Matches the dataset guard used by the JS observers. */
+.has-animated,
+[data-animated="true"] {
+  will-change: auto;
+}
+
+/* ── Legacy hero animation kill-switch (kept) ──────────────── */
+.hero-anim-eyebrow, .hero-anim-line1, .hero-anim-line2,
+.hero-anim-line3, .hero-anim-line4, .hero-anim-bottom,
+.hero-anim-svg { animation: none; }

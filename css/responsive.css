@@ -1,0 +1,95 @@
+/* ============================================================
+   responsive.css — Layout breakpoint overrides (mobile-first)
+
+   Loaded AFTER sections.css / projects.css / cta-footer.css /
+   nav.css, so the rules here win via cascade. We use that to:
+     1. Make mobile the default at root level (no media query).
+     2. Re-introduce desktop layout in @media (min-width: 901px).
+     3. Polish intermediate values for wide screens (≥1200px).
+
+   Component-specific responsive rules live next to the component
+   (hero.css, editbay.css, video-reel.css, etc.) — not here.
+   ============================================================ */
+
+/* ════════════════════════════════════════════════════════════
+   DEFAULT — mobile (≤ 600px)
+   ════════════════════════════════════════════════════════════ */
+
+/* Nav: shorter bar, links hidden behind burger */
+:root { --nav-h: 4rem; }
+.nav-container { padding: 1rem var(--pad-page); }
+.nav-links { display: none; }
+
+/* Stacked layouts */
+.philosophy,
+.cta-block,
+.cta-body { grid-template-columns: 1fr; }
+.philosophy-right { border-top: 1px solid var(--rule); }
+.services-grid { grid-template-columns: 1fr; }
+.service-card { border-right: none; border-bottom: 1px solid var(--rule); }
+
+/* Projects table simplified — 3 columns instead of 5 */
+.projects-list { overflow: hidden; }
+.projects-list .project-row { grid-template-columns: 40px 1fr 80px; min-width: 0; }
+.project-category, .project-role { display: none; }
+
+/* Footer stacks vertically */
+footer {
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.25rem var(--pad-page) 2rem;
+  text-align: center;
+}
+
+/* Section headers stack */
+.services-header,
+.projects-header {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+/* ════════════════════════════════════════════════════════════
+   ≥ 901px — tablet landscape & desktop
+   ════════════════════════════════════════════════════════════ */
+@media (min-width: 901px) {
+  :root { --nav-h: 4.25rem; }
+  .nav-container { padding: 1.125rem var(--pad-page); }
+  .nav-links { display: flex; }
+
+  .philosophy,
+  .cta-block,
+  .cta-body { grid-template-columns: 1fr 1fr; }
+  .philosophy-right { border-top: none; }
+  .services-grid { grid-template-columns: repeat(3, 1fr); }
+  .service-card { border-right: 1px solid var(--rule); border-bottom: none; }
+
+  .projects-list { overflow: visible; }
+  .projects-list .project-row { grid-template-columns: 64px 1fr 200px 200px 80px; }
+  .project-category, .project-role { display: revert; }
+
+  footer {
+    flex-direction: row;
+    gap: 0;
+    padding: 1.75rem var(--pad-page);
+    text-align: left;
+  }
+
+  .services-header,
+  .projects-header {
+    flex-direction: row;
+    align-items: flex-end;
+    gap: 2rem;
+  }
+
+  /* Philosophy: intermediate padding for tablet/desktop until ≥1200px */
+  .philosophy-left,
+  .philosophy-right { padding: 3.75rem var(--pad-page); }
+}
+
+/* ════════════════════════════════════════════════════════════
+   ≥ 1200px — wide desktop polish
+   ════════════════════════════════════════════════════════════ */
+@media (min-width: 1200px) {
+  :root { --nav-h: 4.5rem; }
+}

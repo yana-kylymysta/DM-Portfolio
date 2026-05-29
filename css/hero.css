@@ -1,0 +1,674 @@
+/* ============================================================
+   hero.css — Hero section: "The Session Window"
+   Mobile-first. Single column stacked → golden-ratio split ≥901.
+   ============================================================ */
+
+/* ── Parallax scroll scene ───────────────────────────────── */
+/* Gives the sticky hero room to "hold" while about slides in.
+   Height = 200dvh: first 100dvh = hero visible, second 100dvh =
+   about section scrolls up over the scaling hero.              */
+.hero-scroll-scene {
+  position: relative;
+  height: 200dvh;
+}
+
+/* Reduced-motion: collapse the extra space, revert to static */
+@media (prefers-reduced-motion: reduce) {
+  .hero-scroll-scene { height: auto; }
+  .hero {
+    position: relative !important;
+    height: auto !important;
+    transform: none !important;
+    opacity: 1 !important;
+    border-radius: 0 !important;
+  }
+}
+
+.hero {
+  height: 100dvh;            /* exact — required for sticky calc   */
+  min-height: 100dvh;
+  background: var(--bg);
+  color: var(--ink);
+  padding-top: var(--nav-h);
+  position: sticky;          /* sticks inside .hero-scroll-scene   */
+  top: 0;
+  z-index: 1;
+  overflow: hidden;
+  /* Flex column: stretches hero-container to fill 100dvh - nav-h.
+     Without this, hero-container's 1fr grid row has no definite
+     height to resolve against and collapses.                       */
+  display: flex;
+  flex-direction: column;
+  /* Scale from top-centre: hero shrinks downward, stays pinned at
+     viewport top — prevents the vertical shift that made about
+     appear to follow the hero instead of rising independently.     */
+  transform-origin: center top;
+  will-change: transform, opacity, border-radius;
+}
+
+/* Stretch the inner grid to fill the hero exactly to 100dvh below
+   the fixed nav. The grid template (auto 1fr auto) then distributes
+   the leftover height to the middle row — pinning the bottom row
+   above the .session-timecode strip and giving .hero-body room to
+   centre.
+   flex: 1 gives this container a definite height (100dvh - nav-h)
+   which is what the 1fr row needs to compute correctly.            */
+.hero-container {
+  flex: 1;
+  min-width: 0;              /* prevent flex blowout on mobile      */
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  grid-template-columns: 1fr;
+  gap: 0;
+  padding-bottom: 2.25rem;
+}
+
+/* ── Faint grid backdrop ─────────────────────────────────── */
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.10) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.10) 1px, transparent 1px);
+  background-size: 80px 80px;
+  background-position: 0 var(--nav-h);
+  pointer-events: none;
+  mask-image: radial-gradient(ellipse at 50% 40%, black 30%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse at 50% 40%, black 30%, transparent 80%);
+}
+
+/* ── Top track header bar ────────────────────────────────── */
+.hero-track-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.125rem 0;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  color: var(--ink-2);
+  text-transform: uppercase;
+  z-index: 2;
+}
+.hero-track-header-num  { color: var(--accent-2); }
+.hero-track-header-rule { flex: 1; height: 1px; background: var(--section-line); }
+.hero-track-header-rec  { display: flex; align-items: center; gap: 0.5rem; color: var(--accent); }
+.hero-track-header-rec::before {
+  content: '';
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: rec-pulse 1.6s infinite;
+}
+
+/* ── Main hero body — mobile: single column, content centred ── */
+.hero-body {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  /* padding: 2rem clamp(1.618rem, 4vw, 3.5rem); */
+  align-content: center;
+  z-index: 2;
+}
+
+/* ── Left column ─────────────────────────────────────────── */
+.hero-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: clamp(1.25rem, 3vh, 2rem);
+  position: relative;
+  padding: 0;
+  border-right: none;
+}
+
+.hero-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.18em;
+  color: var(--ink-2);
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+.hero-eyebrow::before {
+  content: '';
+  width: 18px; height: 1px;
+  background: var(--accent-2);
+}
+
+.hero-headline-new {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(2rem, 18vw, 7rem);
+  line-height: 0.86;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin: 0;
+  text-transform: uppercase;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  white-space: nowrap;
+}
+.hero-headline-new .word {
+  display: block;
+  overflow-x: visible;
+  overflow-y: clip;
+  position: relative;
+}
+.hero-headline-new .word > span {
+  display: inline-block;
+  clip-path: inset(0 0 100% 0);
+  transform: translateY(0.25em);
+  opacity: 0;
+  will-change: transform, clip-path, opacity;
+  animation: cut-in var(--dur-reveal) var(--ease-reveal) forwards;
+}
+.hero-headline-new .word:nth-child(1) > span { animation-delay: 0.2s; }
+.hero-headline-new .word:nth-child(2) > span { animation-delay: 0.36s; color: var(--accent); }
+
+@keyframes cut-in {
+  0%   { clip-path: inset(0 0 100% 0); transform: translateY(0.25em); opacity: 0; }
+  100% { clip-path: inset(0 0 0% 0);   transform: translateY(0);       opacity: 1; }
+}
+
+.hero-headline-new .dot { display: inline-block; color: var(--accent); }
+
+.hero-tagline {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: clamp(0.95rem, 1.1vw, 1.0625rem);
+  line-height: 1.55;
+  color: var(--ink-2);
+  max-width: 26rem;
+  opacity: 0;
+  transform: translateY(16px);
+  animation: fade-up var(--dur-fade) var(--ease-fade) 0.9s forwards;
+}
+
+@keyframes fade-up {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Right column: waveform + CTA stamp ─────────────────── */
+.hero-right-new {
+  position: relative;
+  height: clamp(160px, 32vw, 220px);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.hero-waveform-new {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(16px);
+  animation: waveform-rise var(--dur-reveal) var(--ease-fade) 0.25s forwards;
+}
+@keyframes waveform-rise {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hero-waveform-new path {
+  fill: none;
+  stroke: var(--accent-2);
+  stroke-width: 1.25;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 4px rgba(91, 224, 200, 0.3));
+  /* Draw-in is JS-driven (wow-effects.js Effect 4) so these are only the
+     static initial state — JS overwrites them via inline style at start. */
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  opacity: 0;
+}
+
+.hero-wave-label {
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.1em;
+  color: var(--ink-3);
+  text-transform: uppercase;
+  opacity: 0;
+  animation: fade-up var(--dur-fade) var(--ease-fade) 1.4s forwards;
+}
+.hero-wave-label.tl { top: 0;    left: 0; }
+.hero-wave-label.tr { top: 0;    right: 0; }
+.hero-wave-label.bl { bottom: 0; left: 0; }
+.hero-wave-label.br { bottom: 0; right: 0; color: var(--accent-2); }
+
+/* ── CTA: Circular stamp — mobile: floats bottom-right of waveform strip ── */
+.hero-stamp {
+  position: absolute;
+  bottom: 0.75rem;
+  right: 0;
+  width:  clamp(118px, 22vw, 150px);
+  height: clamp(118px, 22vw, 150px);
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  text-decoration: none;
+  color: var(--ink);
+  cursor: pointer;
+  margin: 0;
+  z-index: 3;
+  opacity: 0;
+  transform: scale(0.92);
+  animation: stamp-in var(--dur-reveal) var(--ease-reveal) 1.1s forwards;
+  will-change: transform;
+}
+@keyframes stamp-in {
+  to { opacity: 1; transform: scale(1); }
+}
+.hero-stamp::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--ink);
+  border-radius: 50%;
+  transition: border-color var(--dur-fast) var(--ease-glide), transform 0.6s var(--ease-glide);
+}
+.hero-stamp::after {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border-radius: 50%;
+  background: transparent;
+  transition: background var(--dur-fast) var(--ease-glide), inset var(--dur-fast) var(--ease-glide);
+}
+.hero-stamp:hover::before { border-color: var(--accent); transform: scale(1.04); }
+.hero-stamp:hover::after  { background: var(--accent); inset: 4px; }
+.hero-stamp:hover .hero-stamp-core { color: var(--bg); }
+
+.hero-stamp-text {
+  position: absolute;
+  inset: 0;
+  animation: stamp-spin 22s linear infinite;
+}
+.hero-stamp-text text {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.22em;
+  fill: var(--ink-2);
+  text-transform: uppercase;
+}
+@keyframes stamp-spin { to { transform: rotate(360deg); } }
+
+.hero-stamp-core {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.375rem;
+  transition: color var(--dur-fast) var(--ease-glide);
+}
+.hero-stamp-play {
+  width: 0; height: 0;
+  border-style: solid;
+  border-width: 8px 0 8px 12px;
+  border-color: transparent transparent transparent currentColor;
+}
+.hero-stamp-label {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* ── Bottom row — mobile: flex unset, content right-aligned ── */
+.hero-bottom-new {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(1rem, 2.5vw, 2rem);
+  padding: 1.25rem 0;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  color: var(--ink-2);
+  text-transform: uppercase;
+  z-index: 2;
+}
+.hero-bottom-new > :last-child {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.hero-bottom-label { display: none; }
+
+.hero-bottom-meter { display: flex; gap: 3px; }
+.hero-bottom-meter span { width: 3px; height: 14px; background: var(--ink-3); display: block; }
+.hero-bottom-meter span.lit { background: var(--accent-2); }
+.hero-bottom-meter span:nth-child(4).lit { background: var(--accent); }
+
+.hero-scroll-cue { display: flex; align-items: center; gap: 0.5rem; }
+.hero-scroll-cue-arrow { display: inline-block; }
+
+/* ── ≥ 601px: show bottom label ── */
+@media (min-width: 601px) {
+  .hero-bottom-label { display: inline; }
+}
+
+/* ── ≥ 901px: golden-ratio split, larger headline, inline stamp ── */
+@media (min-width: 901px) {
+  .hero-container {
+    padding-bottom: 0;
+  }
+  .hero-body {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.618fr);
+    /* padding: clamp(2rem, 6vh, 4.5rem) clamp(1.618rem, 4vw, 3.5rem); */
+    align-content: stretch;
+  }
+  .hero-left {
+    justify-content: center;
+    /* padding-bottom: clamp(2.5rem, 6vh, 5rem); */
+  }
+  .hero-headline-new {
+    font-size: clamp(4rem, 11vw, 12rem);
+  }
+  .hero-right-new {
+    height: clamp(320px, 55vh, 520px);
+    /* Golden ratio vertical placement:
+       align-self: center puts the block in the grid cell's midpoint,
+       then margin-top (φ⁻² ≈ 23.6% / 2 = 11.8vh) shifts it below
+       mathematical center → optical centre at ≈ 61.8% of the row. */
+    align-self: center;
+    margin-top: clamp(1.25rem, 10vh, 6.5rem);
+  }
+
+  .hero-stamp {
+    position: relative;
+    bottom: auto;
+    right: auto;
+    width:  clamp(140px, 16vw, 200px);
+    height: clamp(140px, 16vw, 200px);
+    align-self: flex-end;
+    margin-left: auto;
+    margin-right: 0;
+    /* Slightly tighter bottom gap after downward shift */
+    margin-bottom: clamp(1rem, 3.82vh, 2.5rem);
+  }
+  /* Center text gets 1.618 relative flex weight vs flanking elements (flex: 1) */
+  .hero-bottom-new > :first-child { flex: 1; }
+  .hero-bottom-new > :nth-child(2) { flex: 1.618; text-align: center; }
+  .hero-bottom-new > :last-child   { flex: 1; }
+}
+
+/* ── ≥ 901px portrait (iPad Pro etc.) — content-driven height ── */
+@media (min-width: 901px) and (orientation: portrait) {
+  .hero { min-height: auto; }
+  .hero-body { padding-block: clamp(3rem, 8vh, 5rem); }
+  .hero-right-new { height: clamp(360px, 48vh, 560px); }
+}
+
+/* ============================================================
+   WOW EFFECTS — additive layer on top of base hero styles.
+   Scoped strictly to .hero / hero descendants. No overrides
+   of base typography, colors, layout. Pointer-fine + non-reduced
+   motion only. JS lives in js/wow-effects.js.
+   ============================================================ */
+
+/* Global: hide native cursor in favor of #dm-pointer / #dm-pointer-ring.
+   `!important` is required here to win against the dozens of existing
+   `cursor: pointer / text / auto` rules across the codebase without
+   refactoring every component. Restoration rules follow. */
+@media (hover: hover) and (pointer: fine) {
+  *,
+  *::before,
+  *::after {
+    cursor: none !important;
+  }
+  /* Restore native cursor for zones that explicitly opt out
+     (e.g. video player controls in editbay where precise pointing matters). */
+  [data-cursor-hide],
+  [data-cursor-hide] * {
+    cursor: auto !important;
+  }
+  /* Text inputs — keep the I-beam caret for typing UX. */
+  input,
+  textarea {
+    cursor: text !important;
+  }
+  select {
+    cursor: pointer !important;
+  }
+}
+
+/* — Effect 2: Oscilloscope BG layer ———————————————————————— */
+#dm-osc-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.07;
+  z-index: 1;          /* above .hero::before grid (no z), below .hero-body (z:2) */
+}
+
+/* — Effect 3: Parallax grid backdrop ——————————————————————— */
+/* Wires the JS-set CSS vars into the pseudo's transform. */
+.hero::before {
+  transform: translate3d(var(--dm-grid-tx, 0), var(--dm-grid-ty, 0), 0);
+  transition: transform 0.45s cubic-bezier(.4, 0, .2, 1);
+}
+
+/* Parallax targets — declare will-change so GPU promotes layers */
+.hero-left,
+.hero-wave-label,
+.hero-stamp {
+  will-change: transform;
+}
+
+/* — Effect 4: Waveform reacts to mouse ————————————————————— */
+.hero-waveform-new svg {
+  transform-origin: center center;
+  transition: transform 0.28s cubic-bezier(.4, 0, .2, 1);
+  will-change: transform;
+}
+
+/* — Effect 1: Custom cursor (dot + ring) and trail ————————— */
+#dm-pointer,
+#dm-pointer-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 10000;
+  opacity: 0;
+  transition: opacity 0.25s cubic-bezier(.4, 0, .2, 1);
+}
+#dm-pointer {
+  width: 8px;
+  height: 8px;
+  background: var(--accent, #FF3B00);
+  border-radius: 50%;
+}
+#dm-pointer-ring {
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(255, 59, 0, 0.75);
+  border-radius: 50%;
+  transition:
+    opacity 0.25s cubic-bezier(.4, 0, .2, 1),
+    width 0.32s cubic-bezier(.4, 0, .2, 1),
+    height 0.32s cubic-bezier(.4, 0, .2, 1),
+    border-color 0.32s cubic-bezier(.4, 0, .2, 1);
+}
+#dm-pointer.is-active,
+#dm-pointer-ring.is-active {
+  opacity: 1;
+}
+#dm-pointer-ring.is-magnetic {
+  width: 20px;
+  height: 20px;
+  border-color: rgba(0, 196, 154, 0.75);
+}
+
+/* — Effect 5: Glitch on "FEELING." ————————————————————————— */
+/* The inner span gets a data-text="FEELING."; ::before / ::after
+   overlay the text with offset color channels when .is-glitching
+   class is toggled (every 3–7 s, 150 ms burst). */
+.hero-headline-new .word:nth-child(2) > span {
+  position: relative;
+}
+.hero-headline-new .word:nth-child(2) > span::before,
+.hero-headline-new .word:nth-child(2) > span::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  opacity: 0;
+  /* inherits font, line-height, transform-origin from parent */
+}
+.hero-headline-new .word:nth-child(2) > span.is-glitching::before {
+  color: rgba(0, 196, 154, 0.9);
+  animation: dm-glitch-a 150ms steps(3, end);
+}
+.hero-headline-new .word:nth-child(2) > span.is-glitching::after {
+  color: rgba(255, 59, 0, 0.9);
+  animation: dm-glitch-b 150ms steps(3, end);
+}
+@keyframes dm-glitch-a {
+  0%   { opacity: 0.9; transform: translate(-2px, 0); clip-path: inset(0 0 65% 0); }
+  40%  { opacity: 0.9; transform: translate( 3px, 0); clip-path: inset(40% 0 25% 0); }
+  80%  { opacity: 0.9; transform: translate(-1px, 0); clip-path: inset(70% 0 0   0); }
+  100% { opacity: 0;   transform: translate(0,   0); clip-path: inset(0); }
+}
+@keyframes dm-glitch-b {
+  0%   { opacity: 0.9; transform: translate( 2px, 0); clip-path: inset(20% 0 60% 0); }
+  40%  { opacity: 0.9; transform: translate(-3px, 0); clip-path: inset(60% 0 10% 0); }
+  80%  { opacity: 0.9; transform: translate( 1px, 0); clip-path: inset
+  }}
+/* ============================================================
+   WOW EFFECTS — TOUCH (mobile + tablet without trackpad)
+   Cursor is replaced by tap-pulse; magnetic CTA replaced by
+   in-view breathing + tap-bounce. Touch-only via media query.
+   ============================================================ */
+
+/* Tap pulse — ephemeral expanding ring on every touchstart */
+.dm-tap-pulse {
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 59, 0, 0.55);
+  pointer-events: none;
+  z-index: 10000;
+  transform: translate(-50%, -50%) scale(0.5);
+  animation: dm-tap-burst 600ms cubic-bezier(.2, .8, .3, 1) forwards;
+}
+@keyframes dm-tap-burst {
+  0%   { transform: translate(-50%, -50%) scale(0.5); opacity: 0.85; background: rgba(255, 59, 0, 0.55); }
+  100% { transform: translate(-50%, -50%) scale(8);   opacity: 0;    background: rgba(255, 59, 0, 0); }
+}
+
+/* CTA stamp — autonomous breathing on touch devices (replaces magnetic).
+   JS adds this class after the stamp-in entrance completes (~2.3 s).
+   opacity: 1 is required: adding this class replaces the stamp-in animation
+   (forwards fill), so without it the base opacity: 0 from .hero-stamp kicks in. */
+.hero-stamp.dm-cta-breathing {
+  animation: dm-cta-breathe 3s ease-in-out infinite;
+  opacity: 1;
+}
+@keyframes dm-cta-breathe {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.04); }
+}
+
+/* CTA stamp — tap bounce. Mutually exclusive with breathing;
+   JS swaps classes around the bounce. opacity: 1 for same reason as above. */
+.hero-stamp.dm-cta-bouncing {
+  animation: dm-cta-bounce 420ms cubic-bezier(.4, 0, .2, 1) forwards;
+  opacity: 1;
+}
+@keyframes dm-cta-bounce {
+  0%   { transform: scale(1);    }
+  30%  { transform: scale(0.92); }
+  60%  { transform: scale(1.06); }
+  100% { transform: scale(1);    }
+}
+
+/* Touch-only: hide the desktop tap-pulse and breathing wouldn't ever activate
+   on hover-fine devices anyway (gated in JS), but as a safety: */
+@media (hover: hover) and (pointer: fine) {
+  .dm-tap-pulse { display: none; }
+}
+
+
+/* ============================================================
+   HERO ↔ ABOUT TRANSITION — "Edit splice"
+   On-brand reference to the hero's "CUT TO FEELING." headline.
+   A single thin orange line sweeps across the viewport when
+   hero exits, while hero contents recede (scale + opacity).
+   ============================================================ */
+
+/* Hero exit scatter — top-level blocks fly to the edges as the user
+   scrolls past hero. JS applies inline `transform` + `opacity` per
+   element; we declare will-change here so they're already on their
+   own composite layers. */
+.hero-track-header,
+.hero-body,
+.hero-right-new,
+.hero-bottom-new {
+  will-change: transform, opacity;
+}
+
+/* Splice line — thin orange streak sweeps left → right.
+   .is-firing class triggers the keyframe; JS toggles it. */
+.dm-splice-line {
+  position: fixed;
+  left: 0;
+  width: 100vw;
+  height: 2px;
+  pointer-events: none;
+  z-index: 9991;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 59, 0, 0)    8%,
+    rgba(255, 59, 0, 1)   50%,
+    rgba(255, 59, 0, 0)   92%,
+    transparent 100%
+  );
+  opacity: 0;
+  transform: translateX(-100%);
+  will-change: transform, opacity, top;
+  box-shadow:
+    0 0 12px rgba(255, 59, 0, 0.8),
+    0 0 28px rgba(255, 59, 0, 0.35);
+}
+.dm-splice-line.is-firing {
+  animation: dm-splice-sweep 420ms cubic-bezier(.45, 0, .2, 1) forwards;
+}
+@keyframes dm-splice-sweep {
+  0%   { opacity: 0;   transform: translateX(-100%) scaleY(1); }
+  18%  { opacity: 1; }
+  50%  { opacity: 1;                                  scaleY: 1; }
+  100% { opacity: 0;   transform: translateX(100%)  scaleY(0.5); }
+}
+
+
+/* ============================================================
+   PHILOSOPHY — image scale (scroll via CSS var, hover via CSS)
+   GSAP parallax on this element is disabled in motion-system.js,
+   so we own its transform completely. wow-effects.js writes
+   --ph-scale every frame; the :hover rule overrides with 1.2.
+   Parent .philosophy-right has overflow:hidden — 1.2× is clipped.
+   ============================================================ */
+.philosophy-right-img {
+  transform: scale(var(--ph-scale, 1.2));
+  transition: transform 0.5s cubic-bezier(.4, 0, .2, 1);
+}
+.philosophy-right:hover .philosophy-right-img {
+  transform: scale(1.2);
+}

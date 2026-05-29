@@ -1,0 +1,233 @@
+/* ============================================================
+   testimonials.css — Cinematic Pull Quotes + Slider
+   Mobile-first.
+   ============================================================ */
+/* padding from layout.css */
+
+.testimonials { overflow: hidden; }
+
+.testimonials-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.5rem;
+  padding-top: clamp(2rem, 5vh, 3.5rem);
+  margin-bottom: 2rem;
+}
+
+.testimonials-title {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 6vw, 5.25rem);
+  line-height: 0.92;
+  margin-top: 1rem;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.testimonials-title em { font-style: normal; color: var(--accent); }
+
+/* ── Nav: counter + arrows ── */
+.testimonials-nav {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-shrink: 0;
+}
+.testi-counter {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+.testi-arrow {
+  width: 2.5rem; height: 2.5rem;
+  border: 1px solid var(--rule);
+  background: transparent;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: border-color var(--dur-fast) var(--ease-glide), background var(--dur-fast) var(--ease-glide);
+}
+.testi-arrow:hover { background: rgba(255,255,255,0.06); border-color: var(--ink); }
+.testi-arrow svg { width: 14px; height: 14px; stroke: var(--ink); stroke-width: 1.5; fill: none; stroke-linecap: square; }
+.testi-arrow:hover svg { stroke: var(--accent-2); }
+
+/* ── Slider ── */
+.testi-slider-wrap {
+  position: relative;
+  border-top: 1px solid var(--rule);
+  overflow: hidden;
+  cursor: grab;
+}
+.testi-slider-wrap:active,
+.testi-slider-wrap.is-dragging { cursor: grabbing; }
+
+.testi-track {
+  display: flex;
+  transition: transform 0.55s cubic-bezier(.22,1,.36,1);
+  will-change: transform;
+}
+
+.testi-slide {
+  min-width: 100%;
+  padding: 3.5rem 0;
+  border-bottom: 1px solid var(--rule);
+  cursor: grab;
+  position: relative;
+}
+.testi-slider-wrap:active .testi-slide,
+.testi-slider-wrap.is-dragging .testi-slide { cursor: grabbing; }
+
+.testimonials-buttons { display: flex; gap: 1rem; }
+
+/* Pull-quote text — mobile-first font size */
+.testi-pull-quote {
+  font-family: 'Barlow Condensed', var(--font-body), sans-serif;
+  font-size: clamp(1.5rem, 6.5vw, 2.5rem);
+  font-weight: 400;
+  line-height: 1.05;
+  text-transform: none;
+  color: var(--ink-3);
+  transition: color 0.35s ease;
+  max-width: 100%;
+  margin-bottom: 2.5rem;
+  position: relative;
+  user-select: none;
+}
+.testi-pull-quote::before {
+  content: '\201C';
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(4rem, 8vw, 8rem);
+  font-weight: 800;
+  line-height: 0.7;
+  color: var(--ink-3);
+  opacity: 0.18;
+  margin-bottom: 0.35rem;
+  transition: opacity 0.35s ease;
+  letter-spacing: -0.05em;
+}
+.testi-slide.is-active .testi-pull-quote::before { opacity: 1; }
+.testi-slide.is-active .testi-pull-quote { color: var(--ink); }
+
+.testi-pull-quote::after {
+  content: '\201D';
+  position: absolute;
+  right: 0; bottom: -2rem;
+  transform: translateY(100%);
+  font-family: var(--font-display);
+  font-size: clamp(4rem, 8vw, 8rem);
+  font-weight: 800;
+  line-height: 0.7;
+  color: var(--ink-3);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  letter-spacing: -0.05em;
+  pointer-events: none;
+}
+.testi-slide.is-active .testi-pull-quote::after { opacity: 1; }
+
+/* Meta row */
+.testi-meta { display: flex; color: var(--ink-2); }
+
+.testi-author-row { display: flex; align-items: center; gap: 1rem; }
+
+.testi-avatar {
+  width: 2.5rem; height: 2.5rem;
+  border: 1px solid var(--rule);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  color: var(--rule);
+  transition: all 0.3s;
+}
+.testi-avatar svg { width: 20px; height: 20px; }
+.testi-slide.is-active .testi-avatar { border-color: var(--ink-2); color: var(--ink-2); }
+
+.testi-author-name {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 0.2rem;
+  transition: color 0.3s;
+}
+.testi-author-role {
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  transition: color 0.3s;
+}
+.testi-slide.is-active .testi-author-name { color: var(--ink); }
+.testi-slide.is-active .testi-author-role { color: var(--ink-2); }
+
+/* Progress dots */
+.testi-dots { display: flex; align-items: center; gap: 0.5rem; margin-top: 2rem; }
+.testi-dot {
+  width: 20px; height: 2px;
+  background: var(--ink-3);
+  transition: all 0.3s;
+  cursor: pointer;
+  border: none; padding: 0;
+}
+.testi-dot.active { width: 40px; background: var(--accent-2); }
+
+/* Upwork trust badge — mobile-first stacked */
+.testi-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-top: 2.5rem;
+  padding: 0;
+  border: none;
+}
+.testi-badge-headline {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  line-height: 1;
+  color: var(--ink);
+}
+.testi-badge-sub {
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  margin-top: 0.3rem;
+}
+.testi-badge-num {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 4vw, 3.5rem);
+  font-weight: 800;
+  line-height: 1;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+/* ── ≥ 901px: header row + badge row ── */
+@media (min-width: 901px) {
+  .testimonials-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 2rem;
+    margin-bottom: 4rem;
+  }
+  .testi-pull-quote { font-size: clamp(1.75rem, 3vw, 3rem); }
+  .testi-badge {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+}
+
+/* ── ≥ 1000px: slide gets inner padding ── */
+@media (min-width: 1000px) { .testi-slide { padding: 3.5rem 5rem; } }
+@media (min-width: 1400px) { .testi-slide { padding: 3.5rem 10rem; } }

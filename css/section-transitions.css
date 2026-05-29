@@ -1,0 +1,97 @@
+/* ============================================================
+   section-transitions.css — Card-stack parallax between sections
+
+   Pattern (mirrors hero → about):
+     .section-scene  position:relative + ::after 100dvh spacer
+     > section       position:sticky top:0  (exits gracefully)
+     .entering-next  margin-top:-100dvh  (slides in as card)
+
+   JS (section-transitions.js) animates scale/opacity/radius on
+   the sticky exit section as the entering section rises.
+   ============================================================ */
+
+/* ── Scroll scene wrapper ─────────────────────────────────── */
+.section-scene {
+  position: relative;
+  /* z-index assigned per-scene in sections.css:
+     scene-philosophy:2 → scene-services:3 → scene-process:4 → scene-projects:5 */
+}
+
+/* Extra 100dvh scroll room so the exiting section stays sticky
+   while the entering section travels from viewport bottom to top */
+.section-scene::after {
+  content: '';
+  display: block;
+  height: 100dvh;
+  pointer-events: none;
+}
+
+/* ── Exiting section (sticky inside scene) ────────────────── */
+.section-scene > section {
+  position: sticky;
+  top: 0;
+  overflow: hidden;             /* clip border-radius on exit     */
+  transform-origin: center top; /* scale from top — same as hero  */
+  will-change: transform, opacity, border-radius;
+  /* z-index inherits from the section's own rule in sections.css  */
+}
+
+/* ── Entering sections (card sliding up) ─────────────────── */
+/* margin-top:-100dvh and z-index set per-section in sections.css.
+   Card top-corners + shadow to separate layers visually.         */
+.scene-services,
+.scene-testimonials,
+.reel-statement,
+.editbay,
+.cta-block {
+  border-radius: 1.25rem 1.25rem 0 0;
+  box-shadow: 0 -16px 80px rgba(0, 0, 0, 0.14);
+}
+
+/* scene-* wrappers pass radius through to the sticky section inside */
+.scene-services > section,
+.scene-testimonials > section {
+  border-radius: inherit;
+  overflow: hidden;
+}
+
+/* Ensure plain entering sections have solid bg so sticky below is hidden */
+.reel-statement,
+.cta-block {
+  background: var(--bg);
+}
+/* editbay has its own dark bg — no override needed */
+
+/* ── Per-scene overrides ──────────────────────────────────── */
+/* Testimonials content is ~100dvh, so with the default 100dvh spacer
+   the CTA enters from below immediately on scene start (zero dwell).
+   Extra 50dvh gives breathing room: 50dvh dwell → 100dvh CTA entry. */
+.scene-testimonials::after {
+  height: 150dvh;
+}
+
+/* ── Reduced-motion: collapse all parallax ────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .section-scene {
+    height: auto;
+  }
+  .section-scene::after,
+  .scene-testimonials::after {
+    display: none;
+  }
+  .section-scene > section {
+    position: relative !important;
+    transform: none !important;
+    opacity: 1 !important;
+    border-radius: 0 !important;
+  }
+  .scene-services,
+  .scene-testimonials,
+  .reel-statement,
+  .editbay,
+  .cta-block {
+    margin-top: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+}

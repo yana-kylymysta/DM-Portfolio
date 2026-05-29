@@ -1,0 +1,179 @@
+/* ============================================================
+   about.css — About / The Instrument
+   Split: bio + stats LEFT | animated waveform RIGHT
+   Mobile-first: stacked column → side-by-side at ≥901px.
+   ============================================================ */
+
+/* ── Overlay: slides over the sticky hero ───────────────────── */
+/* z-index: 2 ensures .about paints above z-index: 1 .hero.
+   background is required — without it the sticky hero shows through.
+   border-radius gives a "card surfacing" look on the leading edge.
+   box-shadow adds depth between the two layers.                   */
+section.about {
+  position: relative;
+  z-index: 2;
+  background: var(--bg);
+  border-radius: 1.25rem 1.25rem 0 0;
+  box-shadow: 0 -12px 60px rgba(0, 0, 0, 0.55);
+  overflow: hidden;           /* clip border-radius on children    */
+  /* Pull about up by one viewport so it enters the moment user
+     starts scrolling — hero shrinks and about rises simultaneously */
+  margin-top: -100dvh;
+  /* Must be at least 100dvh — guarantees about fully covers the
+     sticky hero (100dvh) from the moment it enters the viewport.
+     Without this, shorter content exposes the hero bottom edge.   */
+  /* min-height: 100dvh; */
+  /* Explicit lock — prevents any JS (old cache, double-load) from
+     dimming the section. Card must be fully opaque at all times. */
+  opacity: 1;
+}
+
+/* ── Default: mobile (≤ 600px) — single column, content first ── */
+.about-content {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.about-right {
+  order: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 2.5rem var(--pad-page);
+  border-bottom: 1px solid var(--rule);
+}
+
+.about-left {
+  order: 2;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 60vw;
+}
+
+.about-wave-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.about-left-content {
+  position: relative;
+  z-index: 2;
+  padding: 2rem var(--pad-page);
+}
+
+.about-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin-bottom: 1.5rem;
+}
+.about-eyebrow::before {
+  content: '✦';
+  font-size: 0.4rem;
+  color: var(--accent);
+}
+
+.about-headline { color: var(--ink); }
+.about-headline em { font-style: normal; color: var(--accent); }
+
+/* ── Bio block ── */
+.about-bio-block { flex: 1; }
+
+.about-bio {
+  font-size: 0.9375rem;
+  font-weight: 300;
+  line-height: 1.8;
+  color: var(--ink-2);
+  margin-top: 1.25rem;
+  max-width: 100%;
+}
+.about-bio + .about-bio { margin-top: 1.25rem; }
+.about-bio strong { font-weight: 500; color: var(--ink); }
+
+/* Tags row */
+.about-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 2rem;
+}
+.about-tag {
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 1px solid var(--rule);
+  color: var(--ink-2);
+  padding: 0.25rem 0.625rem;
+  transition: all 0.15s;
+}
+.about-tag:hover {
+  border-color: var(--accent-2);
+  color: var(--accent-2);
+}
+
+/* Stats column */
+.about-stats { margin-top: 1.5rem; }
+
+.about-stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 1.25rem 0;
+}
+.about-stat-row:not(:last-child) { border-bottom: 1px solid var(--rule); }
+
+.about-stat-num {
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 3.5vw, 3.25rem);
+  font-weight: 600;
+  line-height: 1;
+  color: var(--ink);
+}
+.about-stat-num.accent { color: var(--accent); }
+
+.about-stat-label {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  text-align: right;
+}
+
+/* ── ≥ 901px: side-by-side split ── */
+@media (min-width: 901px) {
+  .about-content {
+    grid-template-columns: 1fr 1fr;
+    min-height: 52vh;
+  }
+  .about-right {
+    order: 0;
+    padding: 2.5rem 2rem;
+    border-bottom: none;
+  }
+  .about-left {
+    order: 0;
+    min-height: 320px;
+    border-right: 1px solid var(--rule);
+  }
+  .about-left-content { padding: 2.5rem 2rem; }
+  .about-bio { max-width: 60ch; }
+}
+
+/* ── ≥ 1200px: wider padding for spacious desktop ── */
+@media (min-width: 1200px) {
+  .about-right { padding: 2.25rem 3rem; }
+  .about-left-content { padding: 3rem; }
+}

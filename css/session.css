@@ -1,0 +1,177 @@
+/* ============================================================
+   session.css — persistent "DAW session" UI elements
+   These appear across all sections and tie the site together.
+   Mobile-first.
+   ============================================================ */
+
+/* ─────────────────────────────────────────────────────────
+   TIMECODE (default: bottom-right on mobile, top-right ≥901)
+   ───────────────────────────────────────────────────────── */
+.session-timecode {
+  position: fixed;
+  bottom: 0.875rem;
+  right: 0.875rem;
+  z-index: 80;
+
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.08em;
+  color: var(--accent-2);
+
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+
+  pointer-events: none;
+  user-select: none;
+}
+
+.session-timecode-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: rec-pulse 1.6s var(--ease-glide) infinite;
+  box-shadow: 0 0 8px var(--accent);
+}
+
+@keyframes rec-pulse {
+  0%, 100% { opacity: 0.35; transform: scale(1); }
+  50%      { opacity: 1;    transform: scale(1.15); }
+}
+
+@media (min-width: 901px) {
+  .session-timecode {
+    top: 1.25rem;
+    bottom: auto;
+    right: var(--pad-page);
+    font-size: 0.6875rem;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────
+   TRACK LABEL (top-left of each section)
+   ───────────────────────────────────────────────────────── */
+.track-header {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+
+  padding: 1.125rem 0 1rem;
+  margin: 0 var(--pad-page) 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  color: var(--ink-2);
+  text-transform: uppercase;
+}
+
+.track-header-num {
+  color: var(--accent-2);
+  font-weight: 400;
+}
+
+.track-header-name {
+  color: var(--ink);
+}
+
+.track-header-rule {
+  flex: 1;
+  height: 1px;
+  background: var(--rule);
+  position: relative;
+  overflow: hidden;
+}
+
+.track-header-rule::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--accent-2);
+  clip-path: inset(0 100% 0 0);
+  pointer-events: none;
+  will-change: clip-path;
+}
+
+.track-header.in-view .track-header-rule::after {
+  animation: track-rule-wave 1.6s var(--ease-glide) 0.15s forwards;
+}
+
+@keyframes track-rule-wave {
+  0%   { clip-path: inset(0 100% 0 0);   }
+  50%  { clip-path: inset(0 0 0 0);      }
+  100% { clip-path: inset(0 0 0 100%);   }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track-header.in-view .track-header-rule::after { animation: none; }
+}
+
+.track-header-meta {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ─────────────────────────────────────────────────────────
+   PLAYHEAD — orange vertical line at viewport center on scroll
+   ───────────────────────────────────────────────────────── */
+.session-playhead {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  background: var(--accent);
+  opacity: 0;
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: 70;
+  box-shadow: 0 0 12px rgba(255, 59, 0, 0.35);
+}
+
+.session-playhead.is-active {
+  animation: playhead-flash 700ms var(--ease-glide);
+}
+
+@keyframes playhead-flash {
+  0%   { opacity: 0;    height: 0;    top: 50%; }
+  20%  { opacity: 0.85; height: 100%; top: 0;   }
+  100% { opacity: 0;    height: 100%; top: 0;   }
+}
+
+/* ─────────────────────────────────────────────────────────
+   CUSTOM CURSOR — hidden by default; only shown on hover-capable
+   desktop pointers (≥901px). On touch / phone it stays hidden.
+   ───────────────────────────────────────────────────────── */
+.dm-cursor {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 200ms var(--ease-glide);
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  text-transform: uppercase;
+  align-items: center;
+  gap: 0.5rem;
+  transform: translate(-50%, -50%);
+  mix-blend-mode: difference;
+}
+
+.dm-cursor::before {
+  content: '';
+  display: block;
+  width: 1px;
+  height: 28px;
+  background: var(--accent);
+}
+
+.dm-cursor.is-visible { opacity: 1; }
+
+@media (hover: hover) and (min-width: 901px) {
+  .dm-cursor { display: flex; }
+}
