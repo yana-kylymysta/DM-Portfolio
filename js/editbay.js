@@ -212,12 +212,43 @@
       ytPlayer.seekTo(r * (ytPlayer.getDuration() || 0), true);
   }
 
+  // ── YT iframe fullscreen letterboxing ─────────────────────
+  // Problem: in fullscreen the iframe is 100%/100% of the wrap (= viewport).
+  // On portrait phones the wrap is much taller than 16:9, so YT renders the
+  // video at iframe-width × 16:9 height and uses the remaining tall space
+  // for its own branding bar + recommended thumbnails. Yana saw this on
+  // iOS Safari/Chrome: "video sits at top, huge black area, YouTube logo
+  // at the bottom — looks broken."
+  //
+  // Fix: force the iframe itself to be 16:9 and letterbox it inside the
+  // wrap. YT then has no extra space to fill with chrome — the video
+  // perfectly matches the iframe box (centered, with black bars).
+  //
+  // Uses min() so the iframe fits either dimension:
+  //   landscape (wide):   height = 100vh, width = 100vh × 16/9
+  //   portrait (tall):    width  = 100vw, height = 100vw ×  9/16
+  // Inline only — no CSS file is touched.
+  const YT_IFRAME_BASE_CSS =
+    'position:absolute;inset:0;width:100%;height:100%;border:0;display:block;';
+  const YT_IFRAME_FS_CSS =
+    'position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);' +
+    'width:min(100vw,calc(100vh * 16 / 9));' +
+    'height:min(100vh,calc(100vw * 9 / 16));' +
+    'border:0;display:block;background:#000;';
+  function applyYtFullscreenFrame(fullscreen) {
+    if (mediaType !== 'youtube' || !ytPlayer?.getIframe) return;
+    const iframe = ytPlayer.getIframe();
+    if (!iframe) return;
+    iframe.style.cssText = fullscreen ? YT_IFRAME_FS_CSS : YT_IFRAME_BASE_CSS;
+  }
+
   function goFullscreen() {
     const wrap = mediaEl?.closest('.editbay-video') || section.querySelector('.editbay-video');
 
     // Toggle off CSS fallback if it's currently active.
     if (wrap?.classList.contains('is-css-fullscreen')) {
       wrap.classList.remove('is-css-fullscreen');
+      applyYtFullscreenFrame(false);
       if (mediaType === 'youtube' && ytPlayer?.setSize) {
         try { ytPlayer.setSize('100%', '100%'); } catch (_) {}
       }
@@ -258,6 +289,7 @@
     //    Adds .is-css-fullscreen class; editbay.css makes it cover
     //    the viewport. Same button (or Escape) toggles it off.
     wrap?.classList.add('is-css-fullscreen');
+    applyYtFullscreenFrame(true);
     // YT layout nudge — '100%' (string) keeps the iframe in sync with its
     // parent box via CSS. Pixel values here would lock the iframe to a fixed
     // viewport snapshot and break on address-bar resize / orientation flip.
@@ -272,6 +304,7 @@
     const exited = document.querySelector('.editbay-video.is-css-fullscreen');
     if (!exited) return;
     exited.classList.remove('is-css-fullscreen');
+    applyYtFullscreenFrame(false);
     // Restore YT size after CSS-fullscreen exits.
     if (mediaType === 'youtube' && ytPlayer?.setSize) {
       try { ytPlayer.setSize('100%', '100%'); } catch (_) {}
@@ -298,6 +331,7 @@
     // (and on address-bar resize on mobile). Defer to next frame so the
     // browser has actually applied the fullscreen viewport size first —
     // fullscreenchange fires *before* layout settles on some engines.
+    applyYtFullscreenFrame(!!fsEl);
     if (mediaType === 'youtube' && ytPlayer?.setSize) {
       requestAnimationFrame(() => {
         try { ytPlayer.setSize('100%', '100%'); } catch (_) {}
@@ -688,56 +722,4 @@
   }
 
   function applyFilters() {
-    // Sync sub-filters row visibility with current category
-    subRow?.classList.toggle('visible', currentCat === 'music-editing');
-
-    let shown = 0, hidden = 0;
-    tracks.forEach(t => {
-      if (matchesFilter(t)) {
-        shown++;
-        const collapsed = !listExpanded && shown > INITIAL_VISIBLE;
-        t.style.display = collapsed ? 'none' : '';
-        if (collapsed) hidden++;
-      } else {
-        t.style.display = 'none';
-      }
-    });
-    if (moreBtn) {
-      moreBtn.style.display = hidden > 0 ? '' : 'none';
-      if (moreCount) moreCount.textContent = `+${hidden}`;
-    }
-    updateCounter();
-  }
-
-  if (moreBtn) {
-    moreBtn.addEventListener('click', () => {
-      listExpanded = true;
-      applyFilters();
-    });
-  }
-
-  filters.forEach(f => f.addEventListener('click', () => {
-    filters.forEach(x => x.classList.toggle('is-active', x === f));
-    currentCat = f.dataset.filter;
-    subRow?.classList.toggle('visible', currentCat === 'music-editing');
-    // Switching back to Music Editing → reset sub to "All" so the user
-    // sees the full library, not whichever sub they last left on.
-    currentSub = 'all';
-    listExpanded = false;
-    subFilters.forEach(x => x.classList.toggle('is-active', x.dataset.filterSub === 'all'));
-    applyFilters();
-    activateFirstVisible();   // auto-play first track of the new category
-  }));
-
-  subFilters.forEach(f => f.addEventListener('click', () => {
-    subFilters.forEach(x => x.classList.toggle('is-active', x === f));
-    currentSub = f.dataset.filterSub;
-    listExpanded = false;
-    applyFilters();
-    activateFirstVisible();   // auto-play first track of the new sub-category
-  }));
-
-  // Initial state: apply filters, then update counter
-  applyFilters();
-
-}());
+    // Sync sub-f

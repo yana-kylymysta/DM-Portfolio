@@ -90,6 +90,29 @@
   // WebKit, which otherwise drops to layout/paint and judders.
   gsap.config({ force3D: true });
 
+  // ════════════════════════════════════════════════════════════
+  //  GLOBAL onEnter — the safety-net IO at the bottom of this file
+  //  observes every .reveal/.fx-*/.editbay-* etc. selector and
+  //  rescues elements stuck at opacity:0. On fast mobile scroll the
+  //  IO could fire 1–2 frames AFTER ScrollTrigger but BEFORE GSAP
+  //  had time to lift opacity above the 0.05 guard — both would then
+  //  write inline styles to the same element and the user saw a
+  //  visible double-fire (the bug Yana caught on About).
+  //
+  //  Marking dataset.animated='true' the moment ScrollTrigger fires
+  //  guarantees the safety-net guard short-circuits on the very next
+  //  IO callback. Applies via defaults so every trigger gets it
+  //  without per-config wiring. Scrub triggers (.hero parallax) also
+  //  fire onEnter — marking '.hero' is harmless, it isn't observed.
+  // ════════════════════════════════════════════════════════════
+  ScrollTrigger.defaults({
+    onEnter: (self) => {
+      if (self.trigger && self.trigger.dataset) {
+        self.trigger.dataset.animated = 'true';
+      }
+    },
+  });
+
   const mm = gsap.matchMedia();
 
   mm.add({
@@ -508,37 +531,4 @@
     // iOS Safari: address-bar show/hide resizes the viewport mid-scroll
     // and IO re-fires on exact viewport edges. -40px pulls the line
     // inside, so resize events don't bounce elements in/out. We also
-    // hard-guard against double-fire with dataset.animated + has-animated.
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        const el = entry.target;
-        // Hard one-shot: dataset attribute survives any class-removal logic.
-        if (el.dataset.animated === 'true') { io.unobserve(el); return; }
-        // Skip if GSAP already played (onComplete adds has-animated).
-        if (el.classList.contains('has-animated')) {
-          el.dataset.animated = 'true';
-          io.unobserve(el);
-          return;
-        }
-        const cs = getComputedStyle(el);
-        if (parseFloat(cs.opacity) < 0.05) {
-          clearHiddenState(el);
-        }
-        // Mark animated regardless — IO is one-shot for this element.
-        el.classList.add('has-animated');
-        el.dataset.animated = 'true';
-        io.unobserve(el);
-      });
-    }, { rootMargin: '0px 0px -40px 0px', threshold: 0.01 });
-
-    // Defer 1500ms so legitimate GSAP reveals get to fire first.
-    // Anything still at opacity:0 at this point is genuinely stuck.
-    setTimeout(() => {
-      document.querySelectorAll(HIDDEN_SELECTOR).forEach((el) => io.observe(el));
-    }, 1500);
-  }
-
-  if (document.readyState === 'complete') installRevealSafetyNet();
-  else addEventListener('load', installRevealSafetyNet, { once: true });
-})();
+    // hard-guard against double-fire w
